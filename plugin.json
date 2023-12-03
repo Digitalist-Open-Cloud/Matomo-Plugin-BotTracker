@@ -1,8 +1,8 @@
 {
     "name": "BotTracker",
-    "version": "3.0.0",
+    "version": "5.0.0",
     "keywords": ["BotTracker"],
-    "homepage": "https://github.com/Thomas--F/BotTracker",
+    "homepage": "https://github.com/digitalist-se/MatomoPlugin-BotTracker",
     "description": "Detection of bots & spiders and count their visits without tracking them in the visitor-log.",
     "license": "GPL v3+",
     "authors": [
@@ -10,14 +10,19 @@
             "name": "Thomas Fasselt",
             "email": "Thomas.Fasselt@gmx.com",
             "homepage": "https://github.com/Thomas--F/BotTracker"
-        }
+        },
+        {
+            "name": "Mikke Schirén",
+            "email": "mikke.schiren@digitalist.se",
+            "homepage": "https://www.digitalist.se"
+        },
     ],
 	"support": {
-	        "issues": "https://github.com/Thomas--F/BotTracker/issues",
-	        "source": "https://github.com/Thomas--F/BotTracker/"
+	        "issues": "https://github.com/digitalist-se/MatomoPlugin-BotTracker/issues",
+	        "source": "https://github.com/digitalist-se/MatomoPlugin-BotTracker"
 	},
     "require": {
         "piwik": ">=5.0.0-rc1,<6.0.0-b1",
-        "php": ">=7.2.5"
+        "php": ">=8.0.0"
     }
 }
