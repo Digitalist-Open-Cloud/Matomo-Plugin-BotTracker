@@ -9,11 +9,6 @@ This plugin is still in BETA-status, but I have tested it for a while. It should
 Before you install this plugin, here's something you should be aware of:
 Many webcrawlers, spiders and bots don't load the images in a page and most of them don't execute JavaScript. So you cannot track them with Matomo if you don't use the PHP-API. The BotTracker can only track those that were caught by Matomo itself.
 
-Additional info:
-I wrote BotTracker for my own needs but people ask me to make it public - so I put it online.
-It's free to use and I will support it as long as I can spend the time. But I will *not* activate a donation button. If someone is paying money, I feel like I have to support him.
-I want to work on this plugin because I want to and not because I have to. I hope you can unterstand that.
-
 ### How it works
 
 The plugin scans the user agent of any incoming visit for specific keywords. If the keyword is found, the visit is excluded from the normal log and the corresponding counter in the bot-table (BOT_DB) is increased.
@@ -25,14 +20,13 @@ You can add/delete/modify the keywords in the administration-menu. There are web
 
 See <http://Matomo.org/faq/plugins/#faq_21>
 
-If you update from Matomo 1.x to Matomo 2.x or from an old version of BotTracker (before 0.45) please reinstall the plugin.
-
 ## License
 
 GPL v3 / fair use
 
-## Support
+## Matomo Plugins by Digitalist
 
-Please direct any feedback to:
+This plugin was created by [Thomas--F](https://github.com/Thomas--F) and was taken over
+by Digitalist as part of contributing back with Matomo 5 upgrades.
 
-* [https://github.com/Thomas--F/BotTracker/issues](https://github.com/Thomas--F/BotTracker/issues)
+For more information about plugins provided by Digitalist, see [our plugin page](https://github.com/digitalist-se/MatomoPlugins).
