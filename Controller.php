@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
@@ -61,7 +62,7 @@ class Controller extends ControllerAdmin
         $this->index($siteID);
     }
 
-    public function config_import()
+    public function configImport()
     {
         Piwik::checkUserHasSuperUserAccess();
 
@@ -188,7 +189,7 @@ class Controller extends ControllerAdmin
         }
     }
 
-    public function config_insert_db()
+    public function configInsertDb()
     {
         try {
             Piwik::checkUserHasSuperUserAccess();

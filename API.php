@@ -1,10 +1,12 @@
 <?php
+
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
  * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\BotTracker;
 
 use Piwik\Db;
@@ -35,7 +37,7 @@ class API extends \Piwik\Plugin\API
         return self::$instance;
     }
 
-    static function getAllBotData($idSite)
+    public static function getAllBotData($idSite)
     {
         $rows = Db::get()->fetchAll("SELECT * FROM " . Common::prefixTable('bot_db') . " WHERE idSite= ? ORDER BY `botId`", [$idSite]);
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
@@ -43,7 +45,7 @@ class API extends \Piwik\Plugin\API
         return DataTable::makeFromIndexedArray($rows);
     }
 
-    static function getAllBotDataForConfig($idsite)
+    public static function getAllBotDataForConfig($idsite)
     {
         $rows = Db::get()->fetchAll("SELECT `idsite`, `botId`, `botName`, `botActive`, `botKeyword`, `extra_stats` FROM " . Common::prefixTable('bot_db') . " WHERE `idsite` = ? ORDER BY `botId`", [$idsite]);
 
@@ -59,7 +61,7 @@ class API extends \Piwik\Plugin\API
         return DataTable::makeFromIndexedArray($rows);
     }
 
-    function getAllBotDataWithIcon($idSite)
+    public function getAllBotDataWithIcon($idSite)
     {
         $dataTable = $this->getAllBotData($idSite);
         $dataTable->renameColumn('botActive', 'label');
@@ -79,7 +81,7 @@ class API extends \Piwik\Plugin\API
     }
 
 
-    static function getAllBotDataPie($idSite)
+    public static function getAllBotDataPie($idSite)
     {
         $rows = Db::get()->fetchAll("SELECT `botName`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `idSite`= ? ORDER BY `botCount` DESC LIMIT 10", [$idSite]);
 
@@ -97,7 +99,7 @@ class API extends \Piwik\Plugin\API
         return DataTable::makeFromIndexedArray($pieArray);
     }
 
-    static function updateBot($botName, $botKeyword, $botActive, $botId, $extraStats)
+    public static function updateBot($botName, $botKeyword, $botActive, $botId, $extraStats)
     {
         Db::get()->query("UPDATE `" . Common::prefixTable('bot_db') . "`
 		             SET `botName` = ?
@@ -107,9 +109,8 @@ class API extends \Piwik\Plugin\API
 		             WHERE `botId` = ?", [self::htmlentities2utf8($botName), self::htmlentities2utf8($botKeyword), $botActive, $extraStats, $botId]);
     }
 
-    static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats)
+    public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats)
     {
-
         Db::get()->query(
             "INSERT INTO `" . Common::prefixTable('bot_db') . "`
                (`idsite`,`botName`, `botActive`, `botKeyword`, `botCount`, `extra_stats`)
@@ -118,12 +119,10 @@ class API extends \Piwik\Plugin\API
         );
     }
 
-    static function insert_default_bots($idsite = 0)
+    public static function insertDefaultBots($idsite = 0)
     {
         $i = 0;
-
         if ($idsite <> 0) {
-            // Only admin is allowed to do this!
             Piwik::checkUserHasSuperUserAccess();
 
             $botList = [];
@@ -177,7 +176,7 @@ class API extends \Piwik\Plugin\API
             $botList[] = ['Chrome-Lighthouse','Chrome-Lighthouse'];
             $botList[] = ['Axios','Axios'];
             $botList[] = ['PetalBot','PetalBot'];
-            $botList[] = ['CriteoBot','CriteoBott'];
+            $botList[] = ['CriteoBot','CriteoBot'];
             $botList[] = ['Baidu','Baidu'];
             $botList[] = ['ContentKing','ContentKing'];
             $botList[] = ['IAS crawler','IAS crawler'];
@@ -188,7 +187,6 @@ class API extends \Piwik\Plugin\API
 
             foreach ($botList as $bot) {
                 $botX = self::getBotByName($idsite, $bot[0]);
-
                 if (empty($botX)) {
                     self::insertBot($idsite, $bot[0], 1, $bot[1], 0);
                     $i++;
@@ -238,7 +236,7 @@ class API extends \Piwik\Plugin\API
 
     /**
      * Get Data for the Report "Top10"
-     * @param int    $idSite
+     * @param int $idSite
      * @param string $period
      * @param string $date
      * @param bool|string $segment
@@ -250,7 +248,7 @@ class API extends \Piwik\Plugin\API
     }
     /**
      * Get Data for the Report "BotTracker"
-     * @param int    $idSite
+     * @param int $idSite
      * @param string $period
      * @param string $date
      * @param bool|string $segment
@@ -264,7 +262,7 @@ class API extends \Piwik\Plugin\API
 
     /**
      * Get Data for Dashboard-Widget
-     * @param int    $idSite
+     * @param int $idSite
      * @param string $period
      * @param string $date
      * @param bool|string $segment

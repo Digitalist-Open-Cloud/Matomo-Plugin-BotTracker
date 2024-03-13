@@ -90,7 +90,7 @@
       <h2>{{'BotTracker_AddNewBots'|translate}}</h2>
 
       <form enctype="multipart/form-data"
-      action="{{ linkTo({'module':'BotTracker','action':'config_insert_db'})}}"
+      action="{{ linkTo({'module':'BotTracker','action':'configInsertDb'})}}"
       method="POST">
         <input type="hidden" value="{{ idSite }}" name="siteID" />
         <input
@@ -139,7 +139,7 @@
     <hr />
     <h3>{{'BotTracker_File'|translate}}</h3>
     <div class="form-group row matomo-form-field">
-    <form enctype="multipart/form-data" action="{{ linkTo({'module':'BotTracker','action':'config_import'})}}" method="POST">
+    <form enctype="multipart/form-data" action="{{ linkTo({'module':'BotTracker','action':'configImport'})}}" method="POST">
       <input type="hidden" name="MAX_FILE_SIZE" value="50000" />
       <div class="col s12 input-field m6">
         {{'BotTracker_Importfile'|translate}} <input name="importfile" type="file" />

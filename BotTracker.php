@@ -1,10 +1,12 @@
 <?php
+
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
  * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
+
 namespace Piwik\Plugins\BotTracker;
 
 use Piwik\Common;
@@ -30,6 +32,7 @@ class BotTracker extends \Piwik\Plugin
     public function install()
     {
         $tableExists = false;
+        $db = $this->getDb();
 
         // create new table "bot_db"
         $query = "CREATE TABLE `" . Common::prefixTable('bot_db') . "`
@@ -47,7 +50,7 @@ class BotTracker extends \Piwik\Plugin
 
         // if the table already exist do not throw error. Could be installed twice...
         try {
-            Db::exec($query);
+            $db->exec($query);
         } catch (\Exception $e) {
             $tableExists = true;
         }
@@ -55,7 +58,7 @@ class BotTracker extends \Piwik\Plugin
         if (!$tableExists) {
             $sites = APISitesManager::getInstance()->getSitesWithAdminAccess();
             foreach ($sites as $site) {
-                BotTrackerAPI::insert_default_bots($site['idsite']);
+                BotTrackerAPI::insertDefaultBots($site['idsite']);
             }
         }
         // Create bot_db_stat table.
@@ -71,7 +74,7 @@ class BotTracker extends \Piwik\Plugin
 			 			PRIMARY KEY(`visitId`,`botId`,`idsite`)
 						)  DEFAULT CHARSET=utf8';
         try {
-            Db::exec($query2);
+            $db->exec($query2);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -85,7 +88,7 @@ class BotTracker extends \Piwik\Plugin
              PRIMARY KEY(`id`)
             )  DEFAULT CHARSET=utf8';
         try {
-            Db::exec($query3);
+            $db->exec($query3);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -105,7 +108,6 @@ class BotTracker extends \Piwik\Plugin
             'AI Assistant',
             'Other',
         ];
-        $db = $this->getDb();
         try {
             foreach ($botTypes as $type) {
                 $sql = sprintf(
@@ -116,17 +118,17 @@ class BotTracker extends \Piwik\Plugin
         } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
     public function uninstall()
     {
+        $db = $this->getDb();
         $query = "DROP TABLE `" . Common::prefixTable('bot_db') . "` ";
-        Db::query($query);
+        $db->query($query);
         $query2 = "DROP TABLE `" . Common::prefixTable('bot_db_stat') . "` ";
-        Db::query($query2);
+        $db->query($query2);
         $query3 = "DROP TABLE `" . Common::prefixTable('bot_type') . "` ";
-        Db::query($query3);
+        $db->query($query3);
     }
 
     public function registerEvents()
@@ -148,7 +150,7 @@ class BotTracker extends \Piwik\Plugin
         $translationKeys[] = 'BotTracker_NoOfActiveBots';
     }
 
-    function checkBot(&$exclude, $request)
+    public function checkBot(&$exclude, $request)
     {
         $userAgent = $request->getUserAgent();
         $idSite = $request->getIdSite();
