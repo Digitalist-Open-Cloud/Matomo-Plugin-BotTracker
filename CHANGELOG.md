@@ -1,4 +1,8 @@
-# Changelog
+# Change log
+
+## 5.0.1
+
+- Removed logToFile. We should not override Matomo core behavior for logging.
 
 ## 3.0.0
 

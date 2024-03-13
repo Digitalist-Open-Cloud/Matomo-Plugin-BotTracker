@@ -1,18 +1,14 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
- *
- * @link http://piwik.org
+ * BotTracker, a Matomo plugin by Digitalist Open Tech
+ * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
-
 namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Piwik;
-use Piwik\Plugin\Report;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\ViewDataTable\Factory as ViewDataTableFactory;
-use Piwik\View;
 use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
 
@@ -55,8 +51,7 @@ class GetBotTrackerAnzeige extends Base
         $view->config->show_table_performance = false;
         $view->config->show_all_views_icons = false;
         $view->config->show_export = false;
-        $view->config->columns_to_display  = array("botName","botCount","botLastVisit");
-        $view->config->disable_row_evolution  = true;
+        $view->config->columns_to_display = ["botName","botCount","botLastVisit"];
         $view->requestConfig->filter_sort_column = 'botCount';
         $view->requestConfig->filter_sort_order = 'desc';
         $view->requestConfig->filter_limit = 10;
@@ -70,7 +65,7 @@ class GetBotTrackerAnzeige extends Base
      */
     public function getRelatedReports()
     {
-        return array(); // eg return array(new XyzReport());
+        return [];
     }
 
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)

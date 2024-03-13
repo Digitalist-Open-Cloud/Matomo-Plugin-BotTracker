@@ -1,18 +1,15 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
- *
- * @link http://piwik.org
+ * BotTracker, a Matomo plugin by Digitalist Open Tech
+ * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Piwik;
-use Piwik\Plugin\Report;
 use Piwik\Plugin\ViewDataTable;
-
-use Piwik\View;
 
 /**
  * This class defines a new report.
@@ -42,9 +39,7 @@ class GetTop10 extends Base
         $view->config->translations['value'] = Piwik::translate('BotTracker_hits_by_Bot');
         $view->config->show_footer_icons = true;
         $view->config->show_insights = false;
-        $view->config->selectable_columns = array("value");
-        $view->config->max_graph_elements = 10;
-        $view->config->disable_row_evolution  = true;
+        $view->config->selectable_columns = ["value"];
         $view->config->show_related_reports  = false;
         $view->config->show_table_all_columns = false;
     }
@@ -57,7 +52,7 @@ class GetTop10 extends Base
      */
     public function getRelatedReports()
     {
-        return array(); // eg return array(new XyzReport());
+        return [];
     }
 
     public function getDefaultTypeViewDataTable()

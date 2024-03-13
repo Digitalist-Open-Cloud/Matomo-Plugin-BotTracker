@@ -1,18 +1,15 @@
 <?php
 /**
- * Piwik - free/libre analytics platform
- *
- * @link http://piwik.org
+ * BotTracker, a Matomo plugin by Digitalist Open Tech
+ * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Piwik;
-use Piwik\Plugin\Report;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\ViewDataTable\Factory as ViewDataTableFactory;
-use Piwik\View;
 use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
 
@@ -27,9 +24,8 @@ class GetBotTracker extends Base
     {
         parent::init();
 
-        $this->name          = Piwik::translate('BotTracker_BotTracker');
+        $this->name = Piwik::translate('BotTracker_Bot_Tracker');
         $this->subcategoryId = 'BotTracker';
-        // This defines in which order your report appears in the mobile app, in the menu and in the list of widgets
         $this->order = 99;
     }
 
@@ -47,8 +43,7 @@ class GetBotTracker extends Base
         $view->config->translations['botCount'] = Piwik::translate('BotTracker_BotCount');
         $view->config->translations['botLastVisit'] = Piwik::translate('BotTracker_BotLastVisit');
         $view->config->translations['label'] = Piwik::translate('BotTracker_BotActive');
-        $view->config->columns_to_display  = array('botName','botKeyword','botCount','botLastVisit','label');
-        $view->config->disable_row_evolution  = true;
+        $view->config->columns_to_display = ['botName','botKeyword','botCount','botLastVisit','label'];
         $view->config->show_search = false;
         $view->config->show_footer_icons = false;
         $view->config->show_exclude_low_population = false;
@@ -58,7 +53,7 @@ class GetBotTracker extends Base
         $view->config->show_pivot_by_subtable = false;
         $view->config->show_table_performance = false;
         $view->config->show_all_views_icons = false;
-        $view->config->show_export = false;
+        $view->config->show_export = true;
         $view->requestConfig->filter_limit = 25;
         $view->requestConfig->filter_sort_column = 'botCount';
         $view->requestConfig->filter_sort_order = 'desc';
@@ -72,12 +67,11 @@ class GetBotTracker extends Base
      */
     public function getRelatedReports()
     {
-        return array(); // eg return array(new XyzReport());
+        return [];
     }
-    
+
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
-        
         $widgetsList->addWidgetConfig(
             $factory->createWidget()->setIsNotWidgetizable()
         );

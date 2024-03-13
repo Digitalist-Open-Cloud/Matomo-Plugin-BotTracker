@@ -1,17 +1,14 @@
 <?php
 /**
- * Piwik - Open source web analytics
- *
- * @link http://piwik.org
+ * BotTracker, a Matomo plugin by Digitalist Open Tech
+ * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- *
- * @category Piwik_Plugins
- * @package BotTracker
  */
 
 namespace Piwik\Plugins\BotTracker;
 
-use Piwik\Piwik;
+//use Piwik\Piwik;
 
 function getActiveIcon($botActive)
 {
@@ -26,9 +23,9 @@ function getActiveIcon($botActive)
 
 function getRequest($key)
 {
-    return (isset($_REQUEST[$key]) && $_REQUEST[$key])?$_REQUEST[$key]:'';
+    return (isset($_REQUEST[$key]) && $_REQUEST[$key]) ? $_REQUEST[$key] : '';
 }
 function getServer($key)
 {
-    return (isset($_SERVER[$key]) && $_SERVER[$key])?$_SERVER[$key]:'';
+    return (isset($_SERVER[$key]) && $_SERVER[$key]) ? $_SERVER[$key] : '';
 }
