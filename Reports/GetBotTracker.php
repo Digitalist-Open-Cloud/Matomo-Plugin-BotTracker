@@ -43,8 +43,7 @@ class GetBotTracker extends Base
         $view->config->translations['botKeyword'] = Piwik::translate('BotTracker_BotKeyword');
         $view->config->translations['botCount'] = Piwik::translate('BotTracker_BotCount');
         $view->config->translations['botLastVisit'] = Piwik::translate('BotTracker_BotLastVisit');
-        $view->config->translations['label'] = Piwik::translate('BotTracker_BotActive');
-        $view->config->columns_to_display = ['botName','botKeyword','botCount','botLastVisit','label'];
+        $view->config->columns_to_display = ['botName','botCount','botLastVisit'];
         $view->config->show_search = false;
         $view->config->show_footer_icons = false;
         $view->config->show_exclude_low_population = false;

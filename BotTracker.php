@@ -13,17 +13,10 @@ use Piwik\Common;
 use Piwik\Db;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
-use Piwik\Plugin;
 use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
 
 class BotTracker extends \Piwik\Plugin
 {
-    public function postLoad()
-    {
-        $dir = Plugin\Manager::getPluginDirectory('BotTracker');
-        require_once $dir . '/functions.php';
-    }
-
     private function getDb()
     {
         return Db::get();
@@ -85,8 +78,8 @@ class BotTracker extends \Piwik\Plugin
             `id` INT(11) NOT NULL AUTO_INCREMENT,
              `name` VARCHAR(255) NOT NULL,
              `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-             PRIMARY KEY(`id`)
-            )  DEFAULT CHARSET=utf8';
+             PRIMARY KEY(`id`), UNIQUE(`name`)
+            ) DEFAULT CHARSET=utf8';
         try {
             $db->exec($query3);
         } catch (\Exception $e) {

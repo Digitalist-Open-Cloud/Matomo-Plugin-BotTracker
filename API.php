@@ -23,12 +23,10 @@ class API extends \Piwik\Plugin\API
 {
     private static $instance = null;
 
-    public function __construct()
+    private function getDb()
     {
-        $dir = \Piwik\Plugin\Manager::getPluginDirectory('BotTracker');
-        require_once $dir . '/functions.php';
+        return Db::get();
     }
-
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -39,6 +37,7 @@ class API extends \Piwik\Plugin\API
 
     public static function getAllBotData($idSite)
     {
+        Piwik::checkUserHasSomeViewAccess();
         $rows = Db::get()->fetchAll("SELECT * FROM " . Common::prefixTable('bot_db') . " WHERE idSite= ? ORDER BY `botId`", [$idSite]);
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         // convert this array to a DataTable object
@@ -47,7 +46,8 @@ class API extends \Piwik\Plugin\API
 
     public static function getAllBotDataForConfig($idsite)
     {
-        $rows = Db::get()->fetchAll("SELECT `idsite`, `botId`, `botName`, `botActive`, `botKeyword`, `extra_stats` FROM " . Common::prefixTable('bot_db') . " WHERE `idsite` = ? ORDER BY `botId`", [$idsite]);
+        Piwik::checkUserHasSomeViewAccess();
+        $rows = Db::get()->fetchAll("SELECT `idsite`, `botId`, `botName`, `botActive`, `botKeyword`, `extra_stats`, `botType` FROM " . Common::prefixTable('bot_db') . " WHERE `idsite` = ? ORDER BY `botId`", [$idsite]);
 
         return $rows;
     }
@@ -55,35 +55,17 @@ class API extends \Piwik\Plugin\API
 
     public static function getActiveBotData($idSite)
     {
+        Piwik::checkUserHasSomeViewAccess();
         $rows = Db::get()->fetchAll("SELECT `botName`, `botLastVisit`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `botActive` = 1 AND idSite= ? ORDER BY `botId`", [$idSite]);
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         // convert this array to a DataTable object
         return DataTable::makeFromIndexedArray($rows);
     }
 
-    public function getAllBotDataWithIcon($idSite)
-    {
-        $dataTable = $this->getAllBotData($idSite);
-        $dataTable->renameColumn('botActive', 'label');
-
-        $dataTable->filter('ColumnCallbackAddMetadata', ['label', 'logo', __NAMESPACE__ . '\getActiveIcon']);
-        $dataTable->filter('ColumnCallbackReplace', ['label', function ($label) {
-            return ' ';
-        }]);
-        $dataTable->queueFilter('ColumnCallbackAddMetadata', [[], 'logoWidth', function () {
-            return 16;
-        }]);
-        $dataTable->queueFilter('ColumnCallbackAddMetadata', [[], 'logoHeight', function () {
-            return 16;
-        }]);
-
-        return $dataTable;
-    }
-
-
     public static function getAllBotDataPie($idSite)
     {
-        $rows = Db::get()->fetchAll("SELECT `botName`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `idSite`= ? ORDER BY `botCount` DESC LIMIT 10", [$idSite]);
+        Piwik::checkUserHasSomeViewAccess();
+        $rows = Db::get()->fetchAll("SELECT `botName`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `botActive` = 1 AND `idSite`= ? ORDER BY `botCount` DESC LIMIT 10", [$idSite]);
 
         $i = 0;
         $keys[0] = "";
@@ -101,6 +83,7 @@ class API extends \Piwik\Plugin\API
 
     public static function updateBot($botName, $botKeyword, $botActive, $botId, $extraStats)
     {
+        Piwik::checkUserHasSuperUserAccess();
         Db::get()->query("UPDATE `" . Common::prefixTable('bot_db') . "`
 		             SET `botName` = ?
 		               , `botKeyword` = ?
@@ -109,22 +92,22 @@ class API extends \Piwik\Plugin\API
 		             WHERE `botId` = ?", [self::htmlentities2utf8($botName), self::htmlentities2utf8($botKeyword), $botActive, $extraStats, $botId]);
     }
 
-    public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats)
+    public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats, $botType = 0)
     {
+        Piwik::checkUserHasSuperUserAccess();
         Db::get()->query(
             "INSERT INTO `" . Common::prefixTable('bot_db') . "`
-               (`idsite`,`botName`, `botActive`, `botKeyword`, `botCount`, `extra_stats`)
-                VALUES (?,?,?,?,0,?)",
-            [$idSite, self::htmlentities2utf8($botName), $botActive, self::htmlentities2utf8($botKeyword), $extraStats]
+               (`idsite`,`botName`, `botActive`, `botKeyword`, `botCount`, `extra_stats`, `botType`)
+                VALUES (?,?,?,?,0,?,?)",
+            [$idSite, self::htmlentities2utf8($botName), $botActive, self::htmlentities2utf8($botKeyword), $extraStats, $botType]
         );
     }
 
     public static function insertDefaultBots($idsite = 0)
     {
+        Piwik::checkUserHasSuperUserAccess();
         $i = 0;
         if ($idsite <> 0) {
-            Piwik::checkUserHasSuperUserAccess();
-
             $botList = [];
             $botList[] = ['Amazonbot','Amazonbot'];
             $botList[] = ['Qualys','Qualys'];
@@ -197,19 +180,22 @@ class API extends \Piwik\Plugin\API
         return $i;
     }
 
-    static function deleteBot($botId)
+    public function deleteBot($botId)
     {
-        Db::get()->query("DELETE FROM `" . Common::prefixTable('bot_db') . "` WHERE `botId` = ?", [$botId]);
+        Piwik::checkUserHasSuperUserAccess();
+        $db = $this->getDb();
+        $db->query("DELETE FROM `" . Common::prefixTable('bot_db') . "` WHERE `botId` = ?", [$botId]);
     }
 
-    static function getBotByName($idSite, $botName)
+    public static function getBotByName($idSite, $botName)
     {
+        Piwik::checkUserHasSomeViewAccess();
         $rows = Db::get()->fetchAll("SELECT * FROM " . Common::prefixTable('bot_db') . " WHERE `botName` = ? AND `idSite`= ? ORDER BY `botId`", [$botName, $idSite]);
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         return $rows;
     }
 
-    static function convertBotLastVisitToLocalTime($rows, $idSite)
+    private static function convertBotLastVisitToLocalTime($rows, $idSite)
     {
         // convert lastVisit to localtime
         $timezone = Site::getTimezoneFor($idSite);
@@ -226,7 +212,7 @@ class API extends \Piwik\Plugin\API
         }
         return $rows;
     }
-    static function htmlentities2utf8($string)
+    private static function htmlentities2utf8($string)
     {
         $output = preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
             return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
@@ -244,6 +230,7 @@ class API extends \Piwik\Plugin\API
      */
     public function getTop10($idSite, $period, $date, $segment = false)
     {
+        Piwik::checkUserHasSomeViewAccess();
         return $this->getAllBotDataPie($idSite);
     }
     /**
@@ -256,7 +243,8 @@ class API extends \Piwik\Plugin\API
      */
     public function getBotTracker($idSite, $period, $date, $segment = false)
     {
-        return $this->getAllBotDataWithIcon($idSite);
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getAllBotData($idSite);
     }
 
 
@@ -270,6 +258,28 @@ class API extends \Piwik\Plugin\API
      */
     public function getBotTrackerAnzeige($idSite, $period, $date, $segment = false)
     {
+        Piwik::checkUserHasSomeViewAccess();
         return $this->getActiveBotData($idSite);
+    }
+
+    public function getBotTypes()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $db = $this->getDb();
+        $rows = $db->fetchAll("SELECT `name`, `id` FROM " . Common::prefixTable('bot_type') . " ORDER BY `name`");
+        return $rows;
+    }
+    public function addBotType($type)
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        try {
+            $db = $this->getDb();
+            $sql = sprintf(
+                'INSERT INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
+            );
+            $db->query($sql, [$type]);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

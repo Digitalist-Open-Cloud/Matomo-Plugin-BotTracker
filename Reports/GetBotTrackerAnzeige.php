@@ -25,7 +25,7 @@ class GetBotTrackerAnzeige extends Base
     {
         parent::init();
 
-        $this->name          = Piwik::translate('BotTracker_DisplayWidget');
+        $this->name = Piwik::translate('BotTracker_DisplayWidget');
         $this->subcategoryId = 'BotTracker';
         $this->order = 99;
     }
@@ -40,7 +40,6 @@ class GetBotTrackerAnzeige extends Base
     {
         $view->config->translations['botId'] = Piwik::translate('BotTracker_BotId');
         $view->config->translations['botName'] = Piwik::translate('BotTracker_BotName');
-        //$view->config->translations['botKeyword'] = Piwik::translate('BotTracker_BotKeyword');
         $view->config->translations['botCount'] = Piwik::translate('BotTracker_BotCount');
         $view->config->translations['botLastVisit'] = Piwik::translate('BotTracker_BotLastVisit');
         $view->config->show_search = false;

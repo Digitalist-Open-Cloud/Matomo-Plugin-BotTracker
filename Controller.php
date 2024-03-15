@@ -15,13 +15,15 @@ use Piwik\Piwik;
 use Piwik\View;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Plugins\BotTracker\API as APIBotTracker;
-use Piwik\Menu\MenuAdmin;
-use Piwik\Menu\MenuTop;
 use Piwik\Request;
 use Piwik\Plugin\ControllerAdmin;
 
+/**
+ * @mixin View
+ */
 class Controller extends ControllerAdmin
 {
+
     public function index($siteID = 0, $errorList = [],)
     {
         Piwik::checkUserHasSuperUserAccess();
@@ -43,8 +45,6 @@ class Controller extends ControllerAdmin
         $view->assign('errorList', $errorList);
 
         $view->nonce = Nonce::getNonce('BotTracker.saveConfig');
-        $view->adminMenu = MenuAdmin::getInstance()->getMenu();
-        $view->topMenu = MenuTop::getInstance()->getMenu();
         $view->notifications = NotificationManager::getAllNotificationsToDisplay();
 
         echo $view->render();
@@ -110,8 +110,8 @@ class Controller extends ControllerAdmin
             foreach ($botList as $bot) {
                 $botName = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_botName', ''));
                 $botKeyword = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_botKeyword', ''));
-                $botActive = trim(Request::fromRequest()->getBoolParameter($bot['botId'] . '_botActive', 0));
-                $extraStats = trim(Request::fromRequest()->getBoolParameter($bot['botId'] . '_extraStats', 0));
+                $botActive = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_botActive', '0'));
+                $extraStats = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_extraStats', '0'));
 
                 if (
                     $botName != $bot['botName'] ||
@@ -138,7 +138,6 @@ class Controller extends ControllerAdmin
     public function addNew()
     {
         try {
-            // Only admin is allowed to do this!
             Piwik::checkUserHasSuperUserAccess();
             $request = Request::fromRequest();
             $siteID = $request->getIntegerParameter('idSite', 0);
@@ -149,8 +148,8 @@ class Controller extends ControllerAdmin
 
             $botName = trim(Request::fromRequest()->getStringParameter('new_botName', ''));
             $botKeyword = trim(Request::fromRequest()->getStringParameter('new_botKeyword', ''));
-            $botActive = trim(Request::fromRequest()->getBoolParameter('new_botActive', 0));
-            $extraStats = trim(Request::fromRequest()->getBoolParameter('new_extraStats', 0));
+            $botActive = trim(Request::fromRequest()->getStringParameter('new_botActive', '0'));
+            $extraStats = trim(Request::fromRequest()->getStringParameter('new_extraStats', '0'));
             if (
                 $botName    != '' ||
                 $botKeyword != ''
@@ -180,7 +179,8 @@ class Controller extends ControllerAdmin
 
             $errorList = [];
 
-            APIBotTracker::deleteBot($botId);
+            $APIBotTracker = new APIBotTracker();
+            $APIBotTracker->deleteBot($botId);
 
             $errorList[] = 'Bot ' . $botId . Piwik::translate('BotTracker_Message_deleted');
             $this->index($siteID, $errorList);
@@ -197,7 +197,7 @@ class Controller extends ControllerAdmin
             $siteID = $request->getIntegerParameter('idSite', 0);
 
             $errorList = [];
-            $i = APIBotTracker::insert_default_bots($siteID);
+            $i = APIBotTracker::insertDefaultBots($siteID);
             $errorList[] = $i . " " . Piwik::translate('BotTracker_Message_bot_inserted');
 
             $this->index($siteID, $errorList);

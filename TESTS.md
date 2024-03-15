@@ -25,5 +25,6 @@ composer install
 Run PHP Codesniffer
 
 ```bash
-vendor/bin/phpcs --ignore=*/vendor/*  --standard=PSR2 .
+/var/www/html/plugins/BotTracker$ vendor/bin/phpcs --ignore=*/vendor/*,Updates/*  --st
+andard=PSR2 .
 ```
