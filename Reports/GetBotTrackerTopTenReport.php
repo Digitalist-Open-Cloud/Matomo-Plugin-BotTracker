@@ -17,16 +17,17 @@ use Piwik\Plugin\ViewDataTable;
  *
  * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
  */
-class GetTop10 extends Base
+class GetBotTrackerTopTenReport extends Base
 {
     protected function init()
     {
         parent::init();
 
-        $this->name = Piwik::translate('BotTracker_Top_10_Bots_Deprecated_Report');
+        $this->name = Piwik::translate('BotTracker_Top_10_Bots');
         $this->subcategoryId = 'BotTracker';
+        $this->documentation = Piwik::translate('BotTracker_TopTenDocumentation');
         // This defines in which order your report appears in the mobile app, in the menu and in the list of widgets
-        $this->order = 99;
+        $this->order = 98;
     }
 
     /**

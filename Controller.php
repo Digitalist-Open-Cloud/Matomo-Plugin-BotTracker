@@ -18,12 +18,8 @@ use Piwik\Plugins\BotTracker\API as APIBotTracker;
 use Piwik\Request;
 use Piwik\Plugin\ControllerAdmin;
 
-/**
- * @mixin View
- */
 class Controller extends ControllerAdmin
 {
-
     public function index($siteID = 0, $errorList = [],)
     {
         Piwik::checkUserHasSuperUserAccess();
@@ -120,9 +116,15 @@ class Controller extends ControllerAdmin
                     $extraStats != $bot['extra_stats']
                 ) {
                     if (empty($botName)) {
-                        $errorList[] = Piwik::translate('BotTracker_BotName') . ' ' . $bot['botId'] . Piwik::translate('BotTracker_Error_empty');
+                        $errorList[] = Piwik::translate('BotTracker_BotName') .
+                        ' ' .
+                        $bot['botId'] .
+                        Piwik::translate('BotTracker_Error_empty');
                     } elseif (empty($botKeyword)) {
-                        $errorList[] = Piwik::translate('BotTracker_BotKeyword') . ' ' . $bot['botId'] . Piwik::translate('BotTracker_Error_empty');
+                        $errorList[] = Piwik::translate('BotTracker_BotKeyword') .
+                        ' ' .
+                        $bot['botId'] .
+                        Piwik::translate('BotTracker_Error_empty');
                     } else {
                         APIBotTracker::updateBot($botName, $botKeyword, $botActive, $bot['botId'], $extraStats);
                     }
@@ -142,6 +144,7 @@ class Controller extends ControllerAdmin
             $request = Request::fromRequest();
             $siteID = $request->getIntegerParameter('idSite', 0);
 
+            // @remove?
             $botList = APIBotTracker::getAllBotDataForConfig($siteID);
 
             $errorList = [];
@@ -155,9 +158,11 @@ class Controller extends ControllerAdmin
                 $botKeyword != ''
             ) {
                 if (empty($botName)) {
-                        $errorList[] = Piwik::translate('BotTracker_BotName') . Piwik::translate('BotTracker_Error_empty');
+                        $errorList[] = Piwik::translate('BotTracker_BotName') .
+                        Piwik::translate('BotTracker_Error_empty');
                 } elseif (empty($botKeyword)) {
-                        $errorList[] = Piwik::translate('BotTracker_BotKeyword') . Piwik::translate('BotTracker_Error_empty');
+                        $errorList[] = Piwik::translate('BotTracker_BotKeyword') .
+                        Piwik::translate('BotTracker_Error_empty');
                 } else {
                     APIBotTracker::insertBot($siteID, $botName, $botActive, $botKeyword, $extraStats);
                 }
@@ -182,7 +187,7 @@ class Controller extends ControllerAdmin
             $APIBotTracker = new APIBotTracker();
             $APIBotTracker->deleteBot($botId);
 
-            $errorList[] = 'Bot ' . $botId . Piwik::translate('BotTracker_Message_deleted');
+            $errorList[] = 'Bot ' . $botId . ' ' . Piwik::translate('BotTracker_Message_deleted');
             $this->index($siteID, $errorList);
         } catch (\Exception $e) {
             echo $e;

@@ -2,24 +2,37 @@
 
 ## 5.1.0
 
-This is a big update, with changes in code, new reports, new default bots added etc.
+This is a big update, with changes in code, updated reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added.
 
 ### Breaking changes
 
 * functions.php removed
-* botlist.txt removed, hard to keep up to date.
-* CHANGELOG format changed to follow Markdown standard.
+* File botlist.txt removed, hard to keep up to date.
+* File CHANGELOG.md format changed to follow Markdown standard.
+
+## Deprecations
+
+* Bot visits will now be tracked in table bot_visits, and use of visits in bot_db is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be shown for dates. As the old format only allowed to show the total. Old reports will stay until 5.2.0.
+
+### Schema changes
+
+* Table bot_db, botName could now be 256 chars long.
+* Table botd_db, botKeyword could now be 256 chars long.
+* Table bot_type added.
+* Column botType added in table bot_db
+* Table bot_visits added.
 
 ### New functions
 
 * Bots can now be categorized with Bot type (Search, Monitoring etc.)
-* Various Cli Commands added:
+* Various Cli Commands added for simpler administration and automation.
   * bottracker:add-bot
   * bottracker:add-bot-type
   * bottracker:add-default-bots
   * bottracker:delete-bot
   * bottracker:list-bot-types
   * bottracker:list-bots
+* New reports and widgets based on date.
 
 ## 5.0.1
 

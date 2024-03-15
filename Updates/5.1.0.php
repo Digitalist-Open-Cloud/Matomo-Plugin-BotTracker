@@ -42,6 +42,18 @@ class Updates_5_1_0 extends PiwikUpdates
             'botType',
             'TINYINT(0) UNSIGNED NULL DEFAULT 0'
         );
+        $migrations[] = $this->migration->db->changeColumnType('bot_db', 'botName', 'VARCHAR(256)');
+        $migrations[] = $this->migration->db->changeColumnType('bot_db', 'botKeyword', 'VARCHAR(256)');
+        $migrations[] = $this->migration->db->changeColumnType('bot_db_stat', 'page', 'VARCHAR(256)');
+        $migrations[] = $this->migration->db->changeColumnType('bot_db_stat', 'useragent', 'VARCHAR(256)');
+
+        $migrations[] = $this->migration->db->createTable('bot_visits', [
+            'id' => 'bigint unsigned NOT NULL AUTO_INCREMENT',
+            'botId' => 'INT UNSIGNED',
+            'idsite' => 'INT UNSIGNED',
+            'date' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+
+        ], $primaryKey = 'id');
 
         $migrations[] = $this->migration->db->createTable('bot_type', [
             'id' => 'INT(11) NOT NULL AUTO_INCREMENT',

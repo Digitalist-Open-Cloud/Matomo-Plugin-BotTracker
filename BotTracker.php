@@ -31,9 +31,9 @@ class BotTracker extends \Piwik\Plugin
         $query = "CREATE TABLE `" . Common::prefixTable('bot_db') . "`
 						 (`botId` INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 						  `idsite` INTEGER(10) UNSIGNED NOT NULL,
-						  `botName` VARCHAR(100) NOT NULL,
+						  `botName` VARCHAR(256) NOT NULL,
 						  `botActive` BOOLEAN NOT NULL,
-						  `botKeyword` VARCHAR(32) NOT NULL,
+						  `botKeyword` VARCHAR(256) NOT NULL,
 						  `botCount` INTEGER(10) UNSIGNED NOT NULL,
 						  `botLastVisit` TIMESTAMP NOT NULL,
 						  `extra_stats` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -111,6 +111,20 @@ class BotTracker extends \Piwik\Plugin
         } catch (\Exception $e) {
             throw $e;
         }
+
+        $query4 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_visits') . '`
+        (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT,
+            `botId` INT UNSIGNED,
+            `idsite` INT UNSIGNED,
+            `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+             PRIMARY KEY(`id`)
+            ) DEFAULT CHARSET=utf8';
+        try {
+            $db->exec($query4);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function uninstall()
@@ -122,6 +136,8 @@ class BotTracker extends \Piwik\Plugin
         $db->query($query2);
         $query3 = "DROP TABLE `" . Common::prefixTable('bot_type') . "` ";
         $db->query($query3);
+        $query4 = "DROP TABLE `" . Common::prefixTable('bot_visits') . "` ";
+        $db->query($query4);
     }
 
     public function registerEvents()
@@ -159,7 +175,16 @@ class BotTracker extends \Piwik\Plugin
 						            LIMIT 1", [$idSite, $userAgent]);
 
         $botId = $result['botId'] ?? 0;
+
+
         if ($botId > 0) {
+            // New since 5.1.0
+            $query = "INSERT INTO `" . Common::prefixTable('bot_visits') . "`
+            (botid, idsite, date) VALUES (?,?,?)";
+            $params = [$botId, $idSite, $currentTimestamp];
+            $db->query($query, $params);
+
+            // @deprecated since 5.1.0
             $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
 			               SET botCount = botCount + 1
 			                 , botLastVisit = ?
@@ -171,7 +196,7 @@ class BotTracker extends \Piwik\Plugin
                 $query = "INSERT INTO `" . Common::prefixTable('bot_db_stat') . "`
 					(idsite, botid, page, visit_timestamp, useragent) VALUES (?,?,?,?,?)";
                 // max length of useragent can be 100 Bytes
-                $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 100)];
+                $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
                 $db->query($query, $params);
             }
         }

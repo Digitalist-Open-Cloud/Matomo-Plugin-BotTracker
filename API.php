@@ -15,6 +15,8 @@ use Piwik\DataTable;
 use Piwik\Site;
 use Piwik\Date;
 use Piwik\Piwik;
+use Piwik\Period;
+use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
 
 /**
  * @package Piwik_BotTracker
@@ -38,16 +40,102 @@ class API extends \Piwik\Plugin\API
     public static function getAllBotData($idSite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = Db::get()->fetchAll("SELECT * FROM " . Common::prefixTable('bot_db') . " WHERE idSite= ? ORDER BY `botId`", [$idSite]);
+        $rows = Db::get()->fetchAll(
+            "SELECT * FROM " . Common::prefixTable('bot_db') .
+            " WHERE idSite= ? ORDER BY `botId`",
+            [$idSite]
+        );
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         // convert this array to a DataTable object
         return DataTable::makeFromIndexedArray($rows);
     }
 
+    public static function getBotTrackerReportData($idSite, $period, $date, $segment)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
+        $startDate = $startDate->toString();
+        $endDate = $endDate->toString();
+        $rows = Db::get()->fetchAll(
+            "SELECT * FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE idSite= ? ORDER BY `botId`",
+            [$idSite]
+        );
+        $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
+
+        // Get totals of a bot number.
+        foreach ($rows as &$row) {
+            $totals = Db::get()->fetchRow(
+                "SELECT COUNT(botId) as total FROM " .
+                Common::prefixTable('bot_visits') .
+                " WHERE botId= ? AND date(date) between ? AND ?",
+                [$row['botId'],
+                $startDate,
+                $endDate]
+            );
+            $row['total'] = implode($totals);
+        }
+
+        // convert this array to a DataTable object
+        return DataTable::makeFromIndexedArray($rows);
+    }
+
+    public static function getBotTrackerTopTenReportPieData($idSite, $period, $date, $segment)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+
+        list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
+        $startDate = $startDate->toString();
+        $endDate = $endDate->toString();
+        $rows = Db::get()->fetchAll(
+            "SELECT `botName`, `botId` FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE idSite= ? ORDER BY `botId`",
+            [$idSite]
+        );
+        // Get totals of a bot number.
+        foreach ($rows as &$row) {
+            $totals = Db::get()->fetchRow(
+                "SELECT COUNT(botId) as total FROM " .
+                Common::prefixTable('bot_visits') .
+                " WHERE botId= ? AND date(date) between ? AND ?",
+                [$row['botId'],
+                $startDate,
+                $endDate]
+            );
+            $row['botCount'] = implode($totals);
+        }
+        $i = 0;
+        $keys[0] = "";
+        $values[0] = "";
+        foreach ($rows as $row) {
+            $keys[$i] = $row['botName'];
+            $values[$i] = $row['botCount'];
+            $i++;
+        }
+
+        $pie = array_combine($keys, $values);
+        // Remove zero results
+        $pie = array_diff($pie, [0]);
+        arsort($pie);
+        $topTen = array_slice($pie, 0, 10);
+
+        return DataTable::makeFromIndexedArray($topTen);
+    }
+
     public static function getAllBotDataForConfig($idsite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = Db::get()->fetchAll("SELECT `idsite`, `botId`, `botName`, `botActive`, `botKeyword`, `extra_stats`, `botType` FROM " . Common::prefixTable('bot_db') . " WHERE `idsite` = ? ORDER BY `botId`", [$idsite]);
+        $rows = Db::get()->fetchAll(
+            "SELECT `idsite`, `botId`,
+            `botName`, `botActive`,
+            `botKeyword`, `extra_stats`,
+            `botType` FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE `idsite` = ? ORDER BY `botId`",
+            [$idsite]
+        );
 
         return $rows;
     }
@@ -56,16 +144,30 @@ class API extends \Piwik\Plugin\API
     public static function getActiveBotData($idSite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = Db::get()->fetchAll("SELECT `botName`, `botLastVisit`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `botActive` = 1 AND idSite= ? ORDER BY `botId`", [$idSite]);
+        $rows = Db::get()->fetchAll(
+            "SELECT `botName`, `botLastVisit`, `botCount` FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE `botActive` = 1 AND idSite= ? ORDER BY `botId`",
+            [$idSite]
+        );
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         // convert this array to a DataTable object
         return DataTable::makeFromIndexedArray($rows);
     }
 
+    /**
+     * @deprecated in 5.1.0, will be removed in 5.2.0
+     */
     public static function getAllBotDataPie($idSite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = Db::get()->fetchAll("SELECT `botName`, `botCount` FROM " . Common::prefixTable('bot_db') . " WHERE `botActive` = 1 AND `idSite`= ? ORDER BY `botCount` DESC LIMIT 10", [$idSite]);
+        $rows = Db::get()->fetchAll(
+            "SELECT `botName`, `botCount` FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE `botActive` = 1 AND `idSite`= ? ORDER BY `botCount`
+            DESC LIMIT 10",
+            [$idSite]
+        );
 
         $i = 0;
         $keys[0] = "";
@@ -84,12 +186,19 @@ class API extends \Piwik\Plugin\API
     public static function updateBot($botName, $botKeyword, $botActive, $botId, $extraStats)
     {
         Piwik::checkUserHasSuperUserAccess();
-        Db::get()->query("UPDATE `" . Common::prefixTable('bot_db') . "`
+        Db::get()->query(
+            "UPDATE `" . Common::prefixTable('bot_db') . "`
 		             SET `botName` = ?
 		               , `botKeyword` = ?
 		               , `botActive` = ?
 		               , `extra_stats` = ?
-		             WHERE `botId` = ?", [self::htmlentities2utf8($botName), self::htmlentities2utf8($botKeyword), $botActive, $extraStats, $botId]);
+		             WHERE `botId` = ?",
+            [self::htmlentities2utf8($botName),
+                     self::htmlentities2utf8($botKeyword),
+                     $botActive,
+                     $extraStats,
+                     $botId]
+        );
     }
 
     public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats, $botType = 0)
@@ -97,9 +206,15 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
         Db::get()->query(
             "INSERT INTO `" . Common::prefixTable('bot_db') . "`
-               (`idsite`,`botName`, `botActive`, `botKeyword`, `botCount`, `extra_stats`, `botType`)
+               (`idsite`,`botName`, `botActive`,
+               `botKeyword`, `botCount`, `extra_stats`, `botType`)
                 VALUES (?,?,?,?,0,?,?)",
-            [$idSite, self::htmlentities2utf8($botName), $botActive, self::htmlentities2utf8($botKeyword), $extraStats, $botType]
+            [$idSite,
+            self::htmlentities2utf8($botName),
+            $botActive,
+            self::htmlentities2utf8($botKeyword),
+            $extraStats,
+            $botType]
         );
     }
 
@@ -115,8 +230,6 @@ class API extends \Piwik\Plugin\API
             $botList[] = ['YandexBot','YandexBot'];
             $botList[] = ['AhrefsBot','AhrefsBot'];
             $botList[] = ['Ahrefs','Ahrefs'];
-            $botList[] = ['curl','curl'];
-            $botList[] = ['Wget','Wget'];
             $botList[] = ['Scrapy','Scrapy'];
             $botList[] = ['Googlebot-Image','Google-Image'];
             $botList[] = ['Googlebot-News','Googlebot-News'];
@@ -184,13 +297,23 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSuperUserAccess();
         $db = $this->getDb();
-        $db->query("DELETE FROM `" . Common::prefixTable('bot_db') . "` WHERE `botId` = ?", [$botId]);
+        $db->query(
+            "DELETE FROM `" .
+            Common::prefixTable('bot_db') .
+            "` WHERE `botId` = ?",
+            [$botId]
+        );
     }
 
     public static function getBotByName($idSite, $botName)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = Db::get()->fetchAll("SELECT * FROM " . Common::prefixTable('bot_db') . " WHERE `botName` = ? AND `idSite`= ? ORDER BY `botId`", [$botName, $idSite]);
+        $rows = Db::get()->fetchAll(
+            "SELECT * FROM " .
+            Common::prefixTable('bot_db') .
+            " WHERE `botName` = ? AND `idSite`= ? ORDER BY `botId`",
+            [$botName, $idSite]
+        );
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         return $rows;
     }
@@ -247,6 +370,33 @@ class API extends \Piwik\Plugin\API
         return $this->getAllBotData($idSite);
     }
 
+        /**
+     * Get Data for the Report "BotTrackerReport"
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return DataTable
+     */
+    public function getBotTrackerReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getBotTrackerReportData($idSite, $period, $date, $segment = false);
+    }
+
+            /**
+     * Get Data for the Report "BotTrackerReport"
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return DataTable
+     */
+    public function getBotTrackerTopTenReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getBotTrackerTopTenReportPieData($idSite, $period, $date, $segment = false);
+    }
 
     /**
      * Get Data for Dashboard-Widget
@@ -281,5 +431,35 @@ class API extends \Piwik\Plugin\API
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public static function getDateRangeForPeriod($date, $period, $lastN = false)
+    {
+        $lastN = false;
+        if ($date === false) {
+            return array(false, false);
+        }
+
+        $isMultiplePeriod = Period\Range::isMultiplePeriod($date, $period);
+
+        // if the range is just a normal period (or the period is a range in which case lastN is ignored)
+        if ($period == 'range') {
+            $oPeriod = new Period\Range('day', $date);
+            $startDate = $oPeriod->getDateStart();
+            $endDate = $oPeriod->getDateEnd();
+        } elseif ($lastN == false && !$isMultiplePeriod) {
+            $oPeriod = Period\Factory::build($period, Date::factory($date));
+            $startDate = $oPeriod->getDateStart();
+            $endDate = $oPeriod->getDateEnd();
+        } else { // if the range includes the last N periods or is a multiple period
+            if (!$isMultiplePeriod) {
+                list($date, $lastN) = Evolution::getDateRangeAndLastN($period, $date, $lastN);
+            }
+            list($startDate, $endDate) = explode(',', $date);
+
+            $startDate = Date::factory($startDate);
+            $endDate = Date::factory($endDate);
+        }
+        return array($startDate, $endDate);
     }
 }

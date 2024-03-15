@@ -19,15 +19,16 @@ use Piwik\Report\ReportWidgetFactory;
  *
  * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
  */
-class GetBotTracker extends Base
+class GetBotTrackerReport extends Base
 {
     protected function init()
     {
         parent::init();
 
-        $this->name = Piwik::translate('BotTracker_Bot_Tracker_Total_Over_Time_Deprecated_Report');
+        $this->name = Piwik::translate('BotTracker_Bot_Tracker_Report');
         $this->subcategoryId = 'BotTracker';
-        $this->order = 99;
+        $this->documentation = Piwik::translate('BotTracker_ReportDocumentation');
+        $this->order = 98;
     }
 
     /**
@@ -40,10 +41,8 @@ class GetBotTracker extends Base
     {
         $view->config->translations['botId'] = Piwik::translate('BotTracker_BotId');
         $view->config->translations['botName'] = Piwik::translate('BotTracker_BotName');
-        $view->config->translations['botKeyword'] = Piwik::translate('BotTracker_BotKeyword');
-        $view->config->translations['botCount'] = Piwik::translate('BotTracker_BotCount');
-        $view->config->translations['botLastVisit'] = Piwik::translate('BotTracker_BotLastVisit');
-        $view->config->columns_to_display = ['botName','botCount','botLastVisit'];
+        $view->config->translations['total'] = Piwik::translate('BotTracker_BotCount');
+        $view->config->columns_to_display = ['botName','total'];
         $view->config->show_search = false;
         $view->config->show_footer_icons = false;
         $view->config->show_exclude_low_population = false;
@@ -54,8 +53,8 @@ class GetBotTracker extends Base
         $view->config->show_table_performance = false;
         $view->config->show_all_views_icons = false;
         $view->config->show_export = true;
-        $view->requestConfig->filter_limit = 25;
-        $view->requestConfig->filter_sort_column = 'botCount';
+        $view->requestConfig->filter_limit = 10;
+        $view->requestConfig->filter_sort_column = 'total';
         $view->requestConfig->filter_sort_order = 'desc';
     }
 
@@ -72,8 +71,6 @@ class GetBotTracker extends Base
 
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
-        $widgetsList->addWidgetConfig(
-            $factory->createWidget()->setIsNotWidgetizable()
-        );
+        $widgetsList->addWidgetConfig($factory->createWidget());
     }
 }
