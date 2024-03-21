@@ -61,7 +61,13 @@ class BotTrackerTest extends IntegrationTestCase
 
     public function testGetBotTrackerReportData() {
         $getAllBotData = $this->botTrackerApi->getBotTrackerReportData($this->idSite, 'day', $this->from, null);
-        $this->assertIsObject($getAllBotData);
+        $this->assertIsArray($getAllBotData);
+
+    }
+
+    public function testGetBotTrackerTopTenReportPieData() {
+        $getPieData = $this->botTrackerApi->getBotTrackerTopTenReportPieData($this->idSite, 'day', $this->from, null);
+        $this->assertIsArray($getPieData);
 
     }
 
