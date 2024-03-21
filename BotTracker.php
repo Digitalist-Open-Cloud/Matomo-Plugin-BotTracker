@@ -60,9 +60,9 @@ class BotTracker extends \Piwik\Plugin
 						`visitId` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			 			`botId` INTEGER(10) UNSIGNED NOT NULL,
 			 			`idsite` INTEGER(10) UNSIGNED NOT NULL,
-			 			`page` VARCHAR(100) NOT NULL,
+			 			`page` VARCHAR(256) NOT NULL,
 			 			`visit_timestamp` TIMESTAMP NOT NULL,
-			 			`useragent` VARCHAR(100) NOT NULL,
+			 			`useragent` VARCHAR(256) NOT NULL,
 
 			 			PRIMARY KEY(`visitId`,`botId`,`idsite`)
 						)  DEFAULT CHARSET=utf8';
@@ -164,8 +164,8 @@ class BotTracker extends \Piwik\Plugin
         $userAgent = $request->getUserAgent();
         $idSite = $request->getIdSite();
         $currentTimestamp = gmdate("Y-m-d H:i:s");
-        // max length of url can be 100 Bytes
-        $currentUrl = substr($request->getParam('url'), 0, 100);
+        // max length of url can be 256 Bytes
+        $currentUrl = substr($request->getParam('url'), 0, 256);
 
         $db = Tracker::getDatabase();
         $result = $db->fetchRow("SELECT `botId`, `extra_stats` FROM " . Common::prefixTable('bot_db') . "
@@ -184,7 +184,7 @@ class BotTracker extends \Piwik\Plugin
             $params = [$botId, $idSite, $currentTimestamp];
             $db->query($query, $params);
 
-            // @deprecated since 5.1.0
+            // @deprecated since v5.1.0
             $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
 			               SET botCount = botCount + 1
 			                 , botLastVisit = ?
@@ -195,10 +195,11 @@ class BotTracker extends \Piwik\Plugin
             if ($result['extra_stats'] > 0) {
                 $query = "INSERT INTO `" . Common::prefixTable('bot_db_stat') . "`
 					(idsite, botid, page, visit_timestamp, useragent) VALUES (?,?,?,?,?)";
-                // max length of useragent can be 100 Bytes
+                // max length of useragent can be 256 Bytes
                 $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
                 $db->query($query, $params);
             }
         }
     }
+
 }
