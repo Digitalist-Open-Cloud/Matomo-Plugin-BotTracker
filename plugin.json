@@ -1,8 +1,8 @@
 {
   "name": "BotTracker",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "keywords": ["BotTracker"],
-  "homepage": "https://github.com/Thomas--F/BotTracker",
+  "homepage": "https://github.com/digitalist-se/MatomoPlugin-BotTracker",
   "description": "Detection of bots & spiders and count their visits without tracking them in the visitor-log.",
   "license": "GPL v3+",
   "authors": [
