@@ -5,6 +5,7 @@
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
  * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
+ * @deprecated since release 5.1.0
  */
 
 namespace Piwik\Plugins\BotTracker\Reports;
@@ -15,9 +16,10 @@ use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
 
 /**
- * This class defines a new report.
+ * Defines the GetBotTracker report.
  *
- * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
+ * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
+ * @deprecated since v5.1.0, will be removed in v5.2.0
  */
 class GetBotTracker extends Base
 {
@@ -31,9 +33,6 @@ class GetBotTracker extends Base
     }
 
     /**
-     * Here you can configure how your report should be displayed. For instance whether your report supports a search
-     * etc. You can also change the default request config. For instance change how many rows are displayed by default.
-     *
      * @param ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)

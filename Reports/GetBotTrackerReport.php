@@ -15,9 +15,8 @@ use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
 
 /**
- * This class defines a new report.
- *
- * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
+ * Defines the GetBotTrackerReport report.
+ * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  */
 class GetBotTrackerReport extends Base
 {
@@ -32,9 +31,6 @@ class GetBotTrackerReport extends Base
     }
 
     /**
-     * Here you can configure how your report should be displayed. For instance whether your report supports a search
-     * etc. You can also change the default request config. For instance change how many rows are displayed by default.
-     *
      * @param ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
@@ -59,9 +55,6 @@ class GetBotTrackerReport extends Base
     }
 
     /**
-     * Here you can define related reports that will be shown below the reports. Just return an array of related
-     * report instances if there are any.
-     *
      * @return \Piwik\Plugin\Report[]
      */
     public function getRelatedReports()

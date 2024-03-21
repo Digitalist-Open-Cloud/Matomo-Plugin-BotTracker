@@ -13,9 +13,8 @@ use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
 
 /**
- * This class defines a new report.
- *
- * See {@link http://developer.piwik.org/api-reference/Piwik/Plugin/Report} for more information.
+ * Defines the class GetBotTrackerTopTenReport report.
+ * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  */
 class GetBotTrackerTopTenReport extends Base
 {
