@@ -1,9 +1,9 @@
 {
     "BotTracker": {
-        "BotKeyword": "Ключавое слова",
         "BotActive": "Актыўныя",
+        "BotKeyword": "Ключавое слова",
+        "false": "Не",
         "save_changes": "Захаваць",
-        "true": "Так",
-        "false": "Не"
+        "true": "Так"
     }
 }

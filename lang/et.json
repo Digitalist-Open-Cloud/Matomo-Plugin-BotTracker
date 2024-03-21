@@ -1,16 +1,16 @@
 {
     "BotTracker": {
-        "BotTracker": "BotTracker",
-        "Widgets": "BotTracker",
+        "BotActive": "Aktiivne",
         "BotCount": "Külastuste arv",
         "BotKeyword": "Märksõna",
         "BotLastVisit": "Viimane külastus",
-        "BotActive": "Aktiivne",
+        "BotTracker": "BotTracker",
+        "delete": "kustuta",
+        "Error_empty": "on tühi!",
+        "false": "Ei",
+        "Message_deleted": "kustutati!",
         "save_changes": "Salvesta",
         "true": "Jah",
-        "false": "Ei",
-        "Error_empty": "on tühi!",
-        "Message_deleted": "kustutati!",
-        "delete": "kustuta"
+        "Widgets": "BotTracker"
     }
 }

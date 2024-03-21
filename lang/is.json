@@ -1,8 +1,8 @@
 {
     "BotTracker": {
-        "BotKeyword": "Leitarorð",
         "BotActive": "Kveikt",
-        "save_changes": "Vista",
-        "false": "Nei"
+        "BotKeyword": "Leitarorð",
+        "false": "Nei",
+        "save_changes": "Vista"
     }
 }

@@ -1,6 +1,6 @@
 {
     "BotTracker": {
-        "save_changes": "Gardar",
-        "false": "Non"
+        "false": "Non",
+        "save_changes": "Gardar"
     }
 }

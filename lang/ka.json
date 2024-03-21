@@ -1,8 +1,8 @@
 {
     "BotTracker": {
-        "BotKeyword": "საკვანძო სიტყვა",
         "BotActive": "აქტიური",
-        "save_changes": "შენახვა",
-        "false": "არა"
+        "BotKeyword": "საკვანძო სიტყვა",
+        "false": "არა",
+        "save_changes": "შენახვა"
     }
 }

@@ -1,9 +1,9 @@
 {
     "BotTracker": {
+        "BotActive": "Aktiv",
         "BotKeyword": "Søgeord",
         "BotLastVisit": "Seneste besøg",
-        "BotActive": "Aktiv",
-        "save_changes": "Gem",
-        "false": "Nej"
+        "false": "Nej",
+        "save_changes": "Gem"
     }
 }

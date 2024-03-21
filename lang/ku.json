@@ -1,11 +1,11 @@
 {
     "BotTracker": {
         "BotKeyword": "کلیلوشە",
-        "save_changes": "پاشەکەوتکردن",
-        "true": "بەڵێ",
-        "false": "نە",
+        "delete": "سڕینەوە",
         "Error_empty": "خاڵییە!",
+        "false": "نە",
         "Message_deleted": "سڕدراوەتەوە!",
-        "delete": "سڕینەوە"
+        "save_changes": "پاشەکەوتکردن",
+        "true": "بەڵێ"
     }
 }

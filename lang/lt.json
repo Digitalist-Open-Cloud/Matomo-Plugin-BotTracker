@@ -1,7 +1,7 @@
 {
     "BotTracker": {
         "BotLastVisit": "Paskutinis apsilankymas",
-        "true": "Taip",
-        "false": "Ne"
+        "false": "Ne",
+        "true": "Taip"
     }
 }

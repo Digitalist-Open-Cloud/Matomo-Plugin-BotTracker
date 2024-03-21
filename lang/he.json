@@ -1,8 +1,8 @@
 {
     "BotTracker": {
-        "BotKeyword": "מונח חיפוש",
         "BotActive": "פעיל",
-        "save_changes": "לשמור",
-        "false": "לא"
+        "BotKeyword": "מונח חיפוש",
+        "false": "לא",
+        "save_changes": "לשמור"
     }
 }
