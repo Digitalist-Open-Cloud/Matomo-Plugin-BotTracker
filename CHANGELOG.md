@@ -1,38 +1,39 @@
-# Change log
+# Bot Tracker Changelog
 
 ## 5.1.0
 
-This is a big update, with changes in code, updated reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added.
+This is a big update, with many changes in code, new reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added.
 
 ### Breaking changes
 
-* functions.php removed
-* File botlist.txt removed, hard to keep up to date.
-* File CHANGELOG.md format changed to follow Markdown standard.
+* `functions.php` removed
+* File `botlist.txt` removed, hard to keep up to date and out of the scope for this plugin.
+* File `CHANGELOG.md` format changed to follow Markdown standard.
 
 ## Deprecations
 
-* Bot visits will now be tracked in table bot_visits, and use of visits in bot_db is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be shown for dates. As the old format only allowed to show the total. Old reports will stay until 5.2.0.
+* Bot visits will now be tracked in table bot_visits, and use of visits in `bot_db` is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be based on dates, ranges etc. As the old format only allowed to show the total. Old reports will stay until 5.2.0. This will though increase database size, as every defined bot visit will get a database row, therefor the new table is kept to absolute minimum needed.
 
 ### Schema changes
 
-* Table bot_db, botName could now be 256 chars long.
-* Table botd_db, botKeyword could now be 256 chars long.
-* Table bot_type added.
-* Column botType added in table bot_db
-* Table bot_visits added.
+* Table `bot_db`: `botName` and `botKeyword` could now be 256 chars long.
+* Table `bot_db_stat`: `page` could now be 256 chars long.
+* Table `bot_type` added.
+* Column `botType` added in table `bot_db`
+* Table `bot_visits` added.
 
 ### New functions
 
-* Bots can now be categorized with Bot type (Search, Monitoring etc.)
-* Various Cli Commands added for simpler administration and automation.
-  * bottracker:add-bot
-  * bottracker:add-bot-type
-  * bottracker:add-default-bots
-  * bottracker:delete-bot
-  * bottracker:list-bot-types
-  * bottracker:list-bots
+* Bots can now be categorised with Bot type (Search, Monitoring etc.)
+* Cli Commands added for simpler administration and automation.
+  * `bottracker:add-bot`
+  * `bottracker:add-bot-type`
+  * `bottracker:add-default-bots`
+  * `bottracker:delete-bot`
+  * `bottracker:list-bot-types`
+  * `bottracker:list-bots`
 * New reports and widgets based on date.
+* Bots could now be manually categorised by bot type, some defaults are created by the plugin, and you could add new ones with cli (`bottracker:add-bot-type`).
 
 ## 5.0.1
 
