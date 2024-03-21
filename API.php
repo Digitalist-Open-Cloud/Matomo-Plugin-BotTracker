@@ -9,6 +9,8 @@
 
 namespace Piwik\Plugins\BotTracker;
 
+use Exception;
+use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Common;
 use Piwik\DataTable;
@@ -29,11 +31,23 @@ class API extends \Piwik\Plugin\API
     {
         return Db::get();
     }
+    /**
+     * @return \Piwik\Plugins\BotTracker\API
+     * @throws Exception
+     */
     public static function getInstance()
     {
-        if (self::$instance == null) {
-            self::$instance = new self();
+        try {
+            $instance = StaticContainer::get('BotTracker_API');
+            if (!($instance instanceof API)) {
+                throw new Exception('BotTracker_API must inherit API');
+            }
+            self::$instance = $instance;
+        } catch (Exception $e) {
+            self::$instance = StaticContainer::get('Piwik\Plugins\BotTracker\API');
+            StaticContainer::getContainer()->set('BotTracker_API', self::$instance);
         }
+
         return self::$instance;
     }
 
@@ -94,6 +108,14 @@ class API extends \Piwik\Plugin\API
             " WHERE idSite= ? ORDER BY `botId`",
             [$idSite]
         );
+        // For some reason, we are off by one, add an dummy bot in end.
+        // @todo: Look into why this is needed.
+        $dummy = [
+            'botName' => 'dummy',
+            'botId' => 0,
+            'botCount' => 0,
+        ];
+        array_push($rows, $dummy);
         // Get totals of a bot number.
         foreach ($rows as &$row) {
             $totals = Db::get()->fetchRow(
@@ -106,17 +128,15 @@ class API extends \Piwik\Plugin\API
             );
             $row['botCount'] = implode($totals);
         }
-        $i = 0;
-        $keys[0] = "";
-        $values[0] = "";
+        $bot = [];
+        $count = [];
         foreach ($rows as $row) {
-            $keys[$i] = $row['botName'];
-            $values[$i] = $row['botCount'];
-            $i++;
+            $bot[] = $row['botName'];
+            $count[] = $row['botCount'];
         }
 
-        $pie = array_combine($keys, $values);
-        // Remove zero results
+        $pie = array_combine($bot, $count);
+        // Remove zero results, and limit to ten.
         $pie = array_diff($pie, [0]);
         arsort($pie);
         $topTen = array_slice($pie, 0, 10);
