@@ -27,3 +27,35 @@ Run PHP Codesniffer
 ```bash
 vendor/bin/phpcs --ignore=*/vendor/*,Updates/*  --standard=PSR2 .
 ```
+
+## Unit tests
+
+Go to plugins/BotTracker
+
+```bash
+composer install
+````
+
+Got to Matomo web root folder (normally `/var/www/html`).
+
+Set up test environment:
+
+(`http_host` is depending on your testing environment, if the host is matomo.loc, set that instead, also same for database etc.)
+
+```bash
+./console development:enable
+./console config:set --section=tests --key=http_host --value=web
+./console config:set --section=tests --key=request_uri --value=/
+./console config:set --section=database_tests --key=host --value=db
+./console config:set --section=database_tests --key=username --value=root
+./console config:set --section=database_tests --key=password --value=root
+./console config:set --section=database_tests --key=dbname --value=matomo_test
+./console config:set --section=database_tests --key=tables_prefix --value=""
+```
+
+### Run tests
+
+```bash
+/var/www/html/plugins/BotTracker/vendor/bin/phpunit -c plugins/BotTracker/tests/phpunit.xml
+```
+
