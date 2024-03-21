@@ -241,18 +241,25 @@ class API extends \Piwik\Plugin\API
     public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats, $botType = 0)
     {
         Piwik::checkUserHasSuperUserAccess();
-        self::getDb()->query(
-            "INSERT INTO `" . Common::prefixTable('bot_db') . "`
-               (`idsite`,`botName`, `botActive`,
-               `botKeyword`, `botCount`, `extra_stats`, `botType`)
-                VALUES (?,?,?,?,0,?,?)",
-            [$idSite,
-            self::htmlentities2utf8($botName),
-            $botActive,
-            self::htmlentities2utf8($botKeyword),
-            $extraStats,
-            $botType]
-        );
+
+        try {
+            self::getDb()->query(
+                "INSERT INTO `" . Common::prefixTable('bot_db') . "`
+                   (`idsite`,`botName`, `botActive`,
+                   `botKeyword`, `botCount`, `extra_stats`, `botType`)
+                    VALUES (?,?,?,?,0,?,?)",
+                [$idSite,
+                self::htmlentities2utf8($botName),
+                $botActive,
+                self::htmlentities2utf8($botKeyword),
+                $extraStats,
+                $botType]
+            );
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+            return false;
+        }
     }
 
     public static function insertDefaultBots($idsite = 0)
