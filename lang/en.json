@@ -40,6 +40,7 @@
     "send_file": "Upload and Process File",
     "Single": "Single",
     "Top_10_Bots": "Bot Tracker: Top 10 Bots",
+    "Top_10_Bots_Deprecated_Report": "Bot Tracker: Total over time Top 10 Bots (deprecated report)",
     "Top10": "Top10",
     "TopTenDocumentation": "This reports shows a chart of the top 10 bots on given date(s). Note that Bot Tracker does not use Segments.",
     "true": "Yes",
