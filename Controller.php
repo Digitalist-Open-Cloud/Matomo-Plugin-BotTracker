@@ -20,7 +20,12 @@ use Piwik\Plugin\ControllerAdmin;
 
 class Controller extends ControllerAdmin
 {
-    public function index($siteID = 0, $errorList = [],)
+
+    public string $nonce;
+    /**
+     * @property string $nonce
+     */
+    public function index($siteID = 0, $errorList = [])
     {
         Piwik::checkUserHasSuperUserAccess();
 
@@ -145,7 +150,7 @@ class Controller extends ControllerAdmin
             $siteID = $request->getIntegerParameter('idSite', 0);
 
             // @remove?
-            $botList = APIBotTracker::getAllBotDataForConfig($siteID);
+            //$botList = APIBotTracker::getAllBotDataForConfig($siteID);
 
             $errorList = [];
 
@@ -167,6 +172,7 @@ class Controller extends ControllerAdmin
                     APIBotTracker::insertBot($siteID, $botName, $botActive, $botKeyword, $extraStats);
                 }
             }
+            $errorList[] = 'Bot ' . $botName . ' ' . Piwik::translate('BotTracker_Added');
 
             $this->index($siteID, $errorList);
         } catch (\Exception $e) {
