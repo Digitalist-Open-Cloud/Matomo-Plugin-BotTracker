@@ -32,6 +32,9 @@ class API extends \Piwik\Plugin\API
         return Db::get();
     }
 
+    /**
+     * @return DataTable
+     */
     private static function getDataTable($rows)
     {
         return DataTable::makeFromIndexedArray($rows);
@@ -70,12 +73,18 @@ class API extends \Piwik\Plugin\API
         //return DataTable::makeFromIndexedArray($rows);
     }
 
+    /**
+     * @return DataTable
+     */
     public static function getBotTrackerReportDataTable($idSite, $period, $date, $segment)
     {
         $rows = self::getBotTrackerReportData($idSite, $period, $date, $segment);
         return self::getDataTable($rows);
     }
 
+    /**
+     * @return array
+     */
     public static function getBotTrackerReportData($idSite, $period, $date, $segment)
     {
         Piwik::checkUserHasSomeViewAccess();
@@ -262,69 +271,76 @@ class API extends \Piwik\Plugin\API
         }
     }
 
+
+    public static function defaultBots()
+    {
+        $botList = [];
+        $botList[] = ['Amazonbot','Amazonbot'];
+        $botList[] = ['Qualys','Qualys'];
+        $botList[] = ['bingbot','bingbot'];
+        $botList[] = ['YandexBot','YandexBot'];
+        $botList[] = ['AhrefsBot','AhrefsBot'];
+        $botList[] = ['Ahrefs','Ahrefs'];
+        $botList[] = ['Scrapy','Scrapy'];
+        $botList[] = ['Googlebot-Image','Google-Image'];
+        $botList[] = ['Googlebot-News','Googlebot-News'];
+        $botList[] = ['Googlebot-Video','Googlebot-Video'];
+        $botList[] = ['Storebot-Google','Storebot-Google'];
+        $botList[] = ['Google-InspectionTool','Google-InspectionTool'];
+        $botList[] = ['Google-Extended','Google-Extended'];
+        $botList[] = ['GoogleOther','GoogleOther'];
+        $botList[] = ['APIs-Google','APIs-Google'];
+        $botList[] = ['AdsBot-Google-Mobile','AdsBot-Google-Mobile'];
+        $botList[] = ['AdsBot-Google','AdsBot-Google'];
+        $botList[] = ['Mediapartners-Google','Google AdSense'];
+        $botList[] = ['Google-Safety','Google-Safety'];
+        $botList[] = ['Googlebot','Googlebot'];
+        $botList[] = ['Google-Read-Aloud','Google-Read-Aloud'];
+        $botList[] = ['Google-Site-Verification','Google-Site-Verification'];
+        $botList[] = ['AdIdxBot','AdIdxBot'];
+        $botList[] = ['NewRelic','NewRelic'];
+        $botList[] = ['Detectify','Detectify'];
+        $botList[] = ['UptimeRobot','UptimeRobot'];
+        $botList[] = ['SendGrid','SendGrid'];
+        $botList[] = ['Applebot','Applebot'];
+        $botList[] = ['PinterestBot','PinterestBot'];
+        $botList[] = ['Pingdom','Pingdom'];
+        $botList[] = ['Barkrowler','Barkrowler'];
+        $botList[] = ['SEMrush','SEMrush'];
+        $botList[] = ['GPTBot','GPTBot'];
+        $botList[] = ['ChatGPT-User','ChatGPT-User'];
+        $botList[] = ['Bytespider','Bytespider'];
+        $botList[] = ['CCBot','CCBot'];
+        $botList[] = ['FacebookBot','FacebookBot'];
+        $botList[] = ['Google-Extended','Google-Extended'];
+        $botList[] = ['Site24x7','Site24x7'];
+        $botList[] = ['Stripe','Stripe'];
+        $botList[] = ['Slackbot','Slackbot'];
+        $botList[] = ['Proximic','Proximic'];
+        $botList[] = ['okhttp','okhttp'];
+        $botList[] = ['Python','Python'];
+        $botList[] = ['SemrushBot','SemrushBot'];
+        $botList[] = ['Chrome-Lighthouse','Chrome-Lighthouse'];
+        $botList[] = ['Axios','Axios'];
+        $botList[] = ['PetalBot','PetalBot'];
+        $botList[] = ['CriteoBot','CriteoBot'];
+        $botList[] = ['Baidu','Baidu'];
+        $botList[] = ['ContentKing','ContentKing'];
+        $botList[] = ['IAS crawler','IAS crawler'];
+        $botList[] = ['Sucuri','Sucuri'];
+        $botList[] = ['Seekport','Seekport'];
+        $botList[] = ['Sogou','Sogou'];
+        $botList[] = ['YahooMailProxy','YahooMailProxy'];
+
+        return $botList;
+    }
+
     public static function insertDefaultBots($idsite = 0)
     {
         Piwik::checkUserHasSuperUserAccess();
         $i = 0;
         if ($idsite <> 0) {
-            $botList = [];
-            $botList[] = ['Amazonbot','Amazonbot'];
-            $botList[] = ['Qualys','Qualys'];
-            $botList[] = ['bingbot','bingbot'];
-            $botList[] = ['YandexBot','YandexBot'];
-            $botList[] = ['AhrefsBot','AhrefsBot'];
-            $botList[] = ['Ahrefs','Ahrefs'];
-            $botList[] = ['Scrapy','Scrapy'];
-            $botList[] = ['Googlebot-Image','Google-Image'];
-            $botList[] = ['Googlebot-News','Googlebot-News'];
-            $botList[] = ['Googlebot-Video','Googlebot-Video'];
-            $botList[] = ['Storebot-Google','Storebot-Google'];
-            $botList[] = ['Google-InspectionTool','Google-InspectionTool'];
-            $botList[] = ['Google-Extended','Google-Extended'];
-            $botList[] = ['GoogleOther','GoogleOther'];
-            $botList[] = ['APIs-Google','APIs-Google'];
-            $botList[] = ['AdsBot-Google-Mobile','AdsBot-Google-Mobile'];
-            $botList[] = ['AdsBot-Google','AdsBot-Google'];
-            $botList[] = ['Mediapartners-Google','Google AdSense'];
-            $botList[] = ['Google-Safety','Google-Safety'];
-            $botList[] = ['Googlebot','Googlebot'];
-            $botList[] = ['Google-Read-Aloud','Google-Read-Aloud'];
-            $botList[] = ['Google-Site-Verification','Google-Site-Verification'];
-            $botList[] = ['AdIdxBot','AdIdxBot'];
-            $botList[] = ['NewRelic','NewRelic'];
-            $botList[] = ['Detectify','Detectify'];
-            $botList[] = ['UptimeRobot','UptimeRobot'];
-            $botList[] = ['SendGrid','SendGrid'];
-            $botList[] = ['Applebot','Applebot'];
-            $botList[] = ['PinterestBot','PinterestBot'];
-            $botList[] = ['Pingdom','Pingdom'];
-            $botList[] = ['Barkrowler','Barkrowler'];
-            $botList[] = ['SEMrush','SEMrush'];
-            $botList[] = ['GPTBot','GPTBot'];
-            $botList[] = ['ChatGPT-User','ChatGPT-User'];
-            $botList[] = ['Bytespider','Bytespider'];
-            $botList[] = ['CCBot','CCBot'];
-            $botList[] = ['FacebookBot','FacebookBot'];
-            $botList[] = ['Google-Extended','Google-Extended'];
-            $botList[] = ['Site24x7','Site24x7'];
-            $botList[] = ['Stripe','Stripe'];
-            $botList[] = ['Slackbot','Slackbot'];
-            $botList[] = ['Proximic','Proximic'];
-            $botList[] = ['okhttp','okhttp'];
-            $botList[] = ['Python','Python'];
-            $botList[] = ['SemrushBot','SemrushBot'];
-            $botList[] = ['Chrome-Lighthouse','Chrome-Lighthouse'];
-            $botList[] = ['Axios','Axios'];
-            $botList[] = ['PetalBot','PetalBot'];
-            $botList[] = ['CriteoBot','CriteoBot'];
-            $botList[] = ['Baidu','Baidu'];
-            $botList[] = ['ContentKing','ContentKing'];
-            $botList[] = ['IAS crawler','IAS crawler'];
-            $botList[] = ['Sucuri','Sucuri'];
-            $botList[] = ['Seekport','Seekport'];
-            $botList[] = ['Sogou','Sogou'];
-            $botList[] = ['YahooMailProxy','YahooMailProxy'];
-
+            $botList = self::defaultBots();
             foreach ($botList as $bot) {
                 $botX = self::getBotByName($idsite, $bot[0]);
                 if (empty($botX)) {
@@ -340,13 +356,19 @@ class API extends \Piwik\Plugin\API
     public function deleteBot($botId)
     {
         Piwik::checkUserHasSuperUserAccess();
-        $db = self::getDb();
-        $db->query(
-            "DELETE FROM `" .
-            Common::prefixTable('bot_db') .
-            "` WHERE `botId` = ?",
-            [$botId]
-        );
+        try {
+            $db = self::getDb();
+            $query = $db->query(
+                "DELETE FROM `" .
+                Common::prefixTable('bot_db') .
+                "` WHERE `botId` = ?",
+                [$botId]
+            );
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+            return false;
+        }
     }
 
     public static function getBotByName($idSite, $botName)
@@ -367,15 +389,20 @@ class API extends \Piwik\Plugin\API
         // convert lastVisit to localtime
         $timezone = Site::getTimezoneFor($idSite);
 
-        foreach ($rows as &$row) {
-            if ($row['botLastVisit'] == '0000-00-00 00:00:00') {
-                $row['botLastVisit'] = " - ";
-            } elseif ($row['botLastVisit'] == '2000-01-01 00:00:00') {
-                $row['botLastVisit'] = " - ";
-            } else {
-                $botLastVisit = Date::adjustForTimezone(strtotime($row['botLastVisit']), $timezone);
-                    $row['botLastVisit'] = date('Y-m-d H:i:s', $botLastVisit);
+        try {
+            foreach ($rows as &$row) {
+                if ($row['botLastVisit'] == '0000-00-00 00:00:00') {
+                    $row['botLastVisit'] = " - ";
+                } elseif ($row['botLastVisit'] == '2000-01-01 00:00:00') {
+                    $row['botLastVisit'] = " - ";
+                } else {
+                    $botLastVisit = Date::adjustForTimezone(strtotime($row['botLastVisit']), $timezone);
+                        $row['botLastVisit'] = date('Y-m-d H:i:s', $botLastVisit);
+                }
             }
+        } catch (\Exception $e) {
+            throw $e;
+            return false;
         }
         return $rows;
     }
@@ -420,7 +447,6 @@ class API extends \Piwik\Plugin\API
      * @param string $period
      * @param string $date
      * @param bool|string $segment
-     * @return DataTable
      */
     public function getBotTrackerReport($idSite, $period, $date, $segment = false)
     {

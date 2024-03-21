@@ -25,7 +25,8 @@ composer install
 Run PHP Codesniffer
 
 ```bash
-vendor/bin/phpcs --ignore=*/vendor/*,Updates/*  --standard=PSR2 .
+vendor/bin/phpcs --ignore=*/vendor/*,Updates/*,tests/*  --standard=PSR2 .
+vendor/bin/phpcs --ignore=*/vendor/*,Updates/*,tests/*  --standard=PSR12 .
 ```
 
 ## Unit tests

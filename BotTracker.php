@@ -201,5 +201,4 @@ class BotTracker extends \Piwik\Plugin
             }
         }
     }
-
 }

@@ -1,7 +1,10 @@
 includes:
   - /var/www/html/plugins/BotTracker/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - /var/www/html/plugins/BotTracker/vendor/spaze/phpstan-disallowed-calls/extension.neon
+  - /var/www/html/plugins/BotTracker/vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
 parameters:
   excludePaths:
     - /var/www/html/plugins/BotTracker/vendor
+    - /var/www/html/plugins/BotTracker/tests
   bootstrapFiles:
-    - /var/www/html/plugins/BotTracker/tests/ci/phpstan.php
+    - bootstrap.php

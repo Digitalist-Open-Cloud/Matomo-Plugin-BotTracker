@@ -53,43 +53,60 @@ class BotTrackerTest extends IntegrationTestCase
         $this->botTrackerApi = new BotTrackerAPI();
     }
 
-    public function testGetAllBotData() {
+    public function testGetAllBotData()
+    {
         $getAllBotData = $this->botTrackerApi->getAllBotData($this->idSite);
         $this->assertIsObject($getAllBotData);
-
     }
 
-    public function testGetBotTrackerReportData() {
+    public function testGetBotTrackerReportData()
+    {
         $getAllBotData = $this->botTrackerApi->getBotTrackerReportData($this->idSite, 'day', $this->from, null);
         $this->assertIsArray($getAllBotData);
     }
 
-    public function testGetBotTrackerTopTenReportPieData() {
+    public function testGetBotTrackerTopTenReportPieData()
+    {
         $getPieData = $this->botTrackerApi->getBotTrackerTopTenReportPieData($this->idSite, 'day', $this->from, null);
         $this->assertIsArray($getPieData);
     }
 
-    public function testGetBotTrackerReportDataTable() {
+    public function testGetBotTrackerReportDataTable()
+    {
         $getAllBotData = $this->botTrackerApi->getBotTrackerReportDataTable($this->idSite, 'day', $this->from, null);
         $this->assertIsObject($getAllBotData);
     }
 
-    public function testGetBotTrackerTopTenReportPieDataTable() {
+    public function testGetBotTrackerTopTenReportPieDataTable()
+    {
         $getPieData = $this->botTrackerApi->getBotTrackerTopTenReportPieDataTable($this->idSite, 'day', $this->from, null);
         $this->assertIsObject($getPieData);
     }
 
-    public function testInsertBotAndCheckIfItExists() {
-        $insertBotFoo = $this->botTrackerApi->insertBot(1,'foo',1,'Foo',0,0);
-        $insertBotBar = $this->botTrackerApi->insertBot(1,'bar',1,'Bar',0,0);
+    public function testInsertBotAndCheckIfItExists()
+    {
+        $insertBotFoo = $this->botTrackerApi->insertBot($this->idSite, 'foo', 1, 'Foo', 0, 0);
+        $insertBotBar = $this->botTrackerApi->insertBot($this->idSite, 'bar', 1, 'Bar', 0, 0);
         $this->assertTrue($insertBotFoo);
         $this->assertTrue($insertBotBar);
-        $checkBotFoo = $this->botTrackerApi->getBotByName(1, 'foo');
-        $checkBotBar = $this->botTrackerApi->getBotByName(1, 'bar');
+        $checkBotFoo = $this->botTrackerApi->getBotByName($this->idSite, 'foo');
+        $checkBotBar = $this->botTrackerApi->getBotByName($this->idSite, 'bar');
         $this->assertArrayHasKey('botName', $checkBotFoo[0]);
         $this->assertContains('foo', $checkBotFoo[0]);
         $this->assertArrayHasKey('botName', $checkBotBar[0]);
         $this->assertContains('bar', $checkBotBar[0]);
+    }
+
+    public function testDefaultBots()
+    {
+        $defaultBots = $this->botTrackerApi->defaultBots();
+        $this->assertIsArray($defaultBots);
+    }
+
+    public function testDeleteBot()
+    {
+        $deleteBot = $this->botTrackerApi->deleteBot(1);
+        $this->assertTrue($deleteBot);
     }
 }
 

@@ -20,7 +20,6 @@ use Piwik\Plugin\ControllerAdmin;
 
 class Controller extends ControllerAdmin
 {
-
     public string $nonce;
     /**
      * @property string $nonce

@@ -2,7 +2,7 @@
 
 ## 5.1.0
 
-This is a big update, with many changes in code, new reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added.
+This is a big update, with many changes in code, new reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added. Some preparations for 5.2.0 release added, that is not supported yet - categorisation of bots with type. Tables are added in this version, but they really do not have any purpose yet.
 
 ### Breaking changes
 
@@ -24,16 +24,14 @@ This is a big update, with many changes in code, new reports, new default bots a
 
 ### New functions
 
-* Bots can now be categorised with Bot type (Search, Monitoring etc.)
 * Cli Commands added for simpler administration and automation.
   * `bottracker:add-bot`
-  * `bottracker:add-bot-type`
+  * `bottracker:add-bot-type` (does not have a purpose yet)
   * `bottracker:add-default-bots`
   * `bottracker:delete-bot`
-  * `bottracker:list-bot-types`
+  * `bottracker:list-bot-types` (does not have a purpose yet)
   * `bottracker:list-bots`
 * New reports and widgets based on date.
-* Bots could now be manually categorised by bot type, some defaults are created by the plugin, and you could add new ones with cli (`bottracker:add-bot-type`).
 
 ## 5.0.1
 
