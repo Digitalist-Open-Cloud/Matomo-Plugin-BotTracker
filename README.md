@@ -1,8 +1,10 @@
 # Matomo BotTracker Plugin
 
+Are you tracking data full of bots? That traffic is normally not useful for you, it is just clutter. Bot Tracker removes those visits from your normal data, and also provide separate reports so you could see which bots are visiting your site.
+
 ## Description
 
-BotTracker is a plugin to exclude and separately track the visits of Bots, Spiders and Web Crawlers, that hit your site. Because Matomo doesn't store the user agent, BotTracker will only be able to track new bots from the moment you add them to its list forward (retroactive tracking isn't possible).
+BotTracker is a plugin to *exclude* and separately *track* the visits of Bots, Spiders and Web Crawlers, that hit your site. Because Matomo doesn't store the user agent, BotTracker will only be able to track new bots from the moment you add them to its list forward (retroactive tracking isn't possible).
 
 Many web crawlers, spiders and bots don't load the images in a page and don't execute JavaScript. So you cannot track them with Matomo if you don't use the PHP-API. The BotTracker can only track those that were caught by Matomo itself. With that said, many crawlers today are using headless browsers, and they do execute JavaScript.
 

@@ -11,6 +11,8 @@ namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
+use Piwik\Widget\WidgetsList;
+use Piwik\Report\ReportWidgetFactory;
 
 /**
  * Defines the class GetBotTrackerTopTenReport report.
@@ -56,6 +58,7 @@ class GetBotTrackerTopTenReport extends Base
         return [];
     }
 
+
     public function getDefaultTypeViewDataTable()
     {
         return 'graphPie';
@@ -63,5 +66,12 @@ class GetBotTrackerTopTenReport extends Base
     public function alwaysUseDefaultViewDataTable()
     {
         return true;
+    }
+
+    public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
+    {
+        $config = $factory->createWidget();
+        $config->setOrder(2);
+        $widgetsList->addWidgetConfig($config);
     }
 }

@@ -12,7 +12,7 @@ This is a big update, with many changes in code, new reports, new default bots a
 
 ## Deprecations
 
-* Bot visits will now be tracked in table bot_visits, and use of visits in `bot_db` is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be based on dates, ranges etc. As the old format only allowed to show the total. Old reports will stay until 5.2.0. This will though increase database size, as every defined bot visit will get a database row, therefor the new table is kept to absolute minimum needed.
+* Bot visits will now be tracked in table bot_visits, and use of visits in `bot_db` is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be based on dates, ranges etc. As the old format only allowed to show the total. Old reports will stay until 5.2.0, and are marked as deprecated in code and in UI. This change will increase database size, as every defined bot visit will get a database row for a visit, therefor the new table is kept to absolute minimum.
 
 ### Schema changes
 
@@ -21,6 +21,12 @@ This is a big update, with many changes in code, new reports, new default bots a
 * Table `bot_type` added.
 * Column `botType` added in table `bot_db`
 * Table `bot_visits` added.
+
+### New reports
+
+* Bot Tracker: Report - shows all bots visits in chosen time frame.
+* Bot Tracker: Top 10 robots - a pie chart with the ten most frequent bots in chosen time frame.
+* Bot Tracker: Extra stats - if extra stats is enabled for a bot, you get all visits by the bots in chosen time frame.
 
 ### New functions
 
@@ -31,7 +37,10 @@ This is a big update, with many changes in code, new reports, new default bots a
   * `bottracker:delete-bot`
   * `bottracker:list-bot-types` (does not have a purpose yet)
   * `bottracker:list-bots`
-* New reports and widgets based on date.
+
+### Testing
+
+Some basic unit och integration tests are added.
 
 ## 5.0.1
 

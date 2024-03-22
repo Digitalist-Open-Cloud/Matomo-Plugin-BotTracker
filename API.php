@@ -70,7 +70,6 @@ class API extends \Piwik\Plugin\API
         $rows = self::convertBotLastVisitToLocalTime($rows, $idSite);
         // convert this array to a DataTable object
         return self::getDataTable($rows);
-        //return DataTable::makeFromIndexedArray($rows);
     }
 
     /**
@@ -452,6 +451,56 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSomeViewAccess();
         return $this->getBotTrackerReportDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * Get Data for the Report "BotStatsReport"
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getStatsReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getStatsReportDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * @return DataTable
+     */
+    public static function getStatsReportDataTable($idSite, $period, $date, $segment)
+    {
+        $rows = self::getStatsReportData($idSite, $period, $date, $segment);
+        return self::getDataTable($rows);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatsReportData($idSite, $period, $date, $segment)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
+        $startDate = $startDate->toString();
+        $endDate = $endDate->toString();
+        $rows = self::getDb()->fetchAll(
+            "SELECT * FROM " .
+            Common::prefixTable('bot_db_stat') .
+            " WHERE idSite= ? AND date(visit_timestamp) between ? AND ? ORDER BY `botId`",
+            [$idSite, $startDate, $endDate ]
+        );
+        foreach ($rows as &$row) {
+            $name = self::getDb()->fetchRow(
+                "SELECT botName FROM " .
+                Common::prefixTable('bot_db') .
+                " WHERE botId= ?",
+                [$row['botId']]
+            );
+            $row['botName'] = implode($name);
+        }
+        // @todo: convert visit_timestamp to site
+        return $rows;
     }
 
     /**

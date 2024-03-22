@@ -9,6 +9,7 @@
     "BotName": "Bot-Name",
     "BotTracker": "BotTracker",
     "Bot_Tracker": "Bot Tracker",
+    "Bot_Tracker_Report_Stats": "Bot Tracker: Extra stats",
     "Bot_Tracker_Report": "Bot Tracker: Report",
     "Bot_Tracker_Total_Over_Time_Deprecated_Report": "Bot Tracker: Totals over time (deprecated report)",
     "Config": "BotTracker Configuration",
@@ -44,6 +45,7 @@
     "Top10": "Top10",
     "TopTenDocumentation": "This reports shows a chart of the top 10 bots on given date(s). Note that Bot Tracker does not use Segments.",
     "true": "Yes",
+    "Visit_Timestamp": "Time stamp",
     "Widgets": "BotTracker"
   }
 }
