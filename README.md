@@ -12,7 +12,7 @@ Many web crawlers, spiders and bots don't load the images in a page and don't ex
 
 The plugin scans the user agent of any incoming visit for specific keywords. If the keyword is found, the visit is excluded from the normal log and the corresponding counter in the bot-table (bot_db) is increased.
 
-If you enable the "extra stats" for a bot entry, the visit will also be written into a second bot-table (bot_db_stats). This second table logs the timestamp, the visited page and the user agent. The second table is currently not displayed in Matomo, but the more experienced users can select the data from the database. Some more detailed reports may come in the future.
+If you enable the "extra stats" for a bot entry, the visit will also be written into a second bot-table (bot_db_stats). This second table logs the timestamp, the visited page and the user agent. This table is exposed in the report Bot Tracker: Extra stats.
 
 You can add/delete/modify the keywords in Administration -> System -> Bot Tracker.
 
