@@ -200,7 +200,7 @@ class API extends \Piwik\Plugin\API
     }
 
     /**
-     * @deprecated in 5.1.0, will be removed in 5.2.0
+     * @deprecated in 5.2.0, will be removed in 5.3.0
      */
     public static function getAllBotDataPie($idSite)
     {

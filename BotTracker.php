@@ -184,7 +184,7 @@ class BotTracker extends \Piwik\Plugin
             $params = [$botId, $idSite, $currentTimestamp];
             $db->query($query, $params);
 
-            // @deprecated since v5.1.0
+            // @deprecated since v5.2.0
             $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
 			               SET botCount = botCount + 1
 			                 , botLastVisit = ?

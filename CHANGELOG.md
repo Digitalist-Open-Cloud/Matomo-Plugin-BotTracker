@@ -1,8 +1,8 @@
 # Bot Tracker Changelog
 
-## 5.1.0
+## 5.2.0
 
-This is a big update, with many changes in code, new reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added. Some preparations for 5.2.0 release added, that is not supported yet - categorisation of bots with type. Tables are added in this version, but they really do not have any purpose yet.
+This is a big update, with many changes in code, new reports, new default bots added etc. To get the new default bots, just import default bots again, only the new ones will be added. Some preparations for 5.3.0 release added, that is not supported yet - categorisation of bots with type. Tables are added in this version, but they really do not have any purpose yet.
 
 ### Breaking changes
 
@@ -12,7 +12,7 @@ This is a big update, with many changes in code, new reports, new default bots a
 
 ## Deprecations
 
-* Bot visits will now be tracked in table bot_visits, and use of visits in `bot_db` is deprecated, and will be removed in 5.2.0. This change is done so reports of bots could be based on dates, ranges etc. As the old format only allowed to show the total. Old reports will stay until 5.2.0, and are marked as deprecated in code and in UI. This change will increase database size, as every defined bot visit will get a database row for a visit, therefor the new table is kept to absolute minimum.
+* Bot visits will now be tracked in table bot_visits, and use of visits in `bot_db` is deprecated, and will be removed in 5.3.0. This change is done so reports of bots could be based on dates, ranges etc. As the old format only allowed to show the total. Old reports will stay until 5.3.0, and are marked as deprecated in code and in UI. This change will increase database size, as every defined bot visit will get a database row for a visit, therefor the new table is kept to absolute minimum.
 
 ### Schema changes
 

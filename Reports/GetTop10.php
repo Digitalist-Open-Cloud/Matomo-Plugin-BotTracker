@@ -5,7 +5,7 @@
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
  * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @deprecated since v5.1.0, will be removed in v5.2.0
+ * @deprecated since v5.2.0, will be removed in v5.3.0
  */
 
 namespace Piwik\Plugins\BotTracker\Reports;
