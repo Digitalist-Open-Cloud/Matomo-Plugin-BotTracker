@@ -153,10 +153,53 @@ class BotTracker extends \Piwik\Plugin
      */
     public function getClientSideTranslationKeys(&$translationKeys)
     {
+        $translationKeys[] = 'BotTracker_AddNewBots';
+        $translationKeys[] = 'BotTracker_Added';
+        $translationKeys[] = 'BotTracker_BotActive';
+        $translationKeys[] = 'BotTracker_BotCount';
+        $translationKeys[] = 'BotTracker_BotKeyword';
+        $translationKeys[] = 'BotTracker_BotLastVisit';
+        $translationKeys[] = 'BotTracker_BotName';
         $translationKeys[] = 'BotTracker_BotTracker';
-        $translationKeys[] = 'BotTracker_PluginDescription';
+        $translationKeys[] = 'BotTracker_Bot_Tracker';
+        $translationKeys[] = 'BotTracker_Bot_Tracker_Report_Stats';
+        $translationKeys[] = 'BotTracker_Bot_Tracker_Report';
+        $translationKeys[] = 'BotTracker_Bot_Tracker_Total_Over_Time_Deprecated_Report';
+        $translationKeys[] = 'BotTracker_Config';
+        $translationKeys[] = 'BotTracker_Delete';
+        $translationKeys[] = 'BotTracker_DisplayWidget';
+        $translationKeys[] = 'BotTracker_DisplayWidget_Deprecated_Report';
+        $translationKeys[] = 'BotTracker_Error_empty';
+        $translationKeys[] = 'BotTracker_Error_Fileimport_Not_Even';
+        $translationKeys[] = 'BotTracker_Error_Fileimport_Upload';
+        $translationKeys[] = 'BotTracker_ExtraStats';
+        $translationKeys[] = 'BotTracker_File';
+        $translationKeys[] = 'BotTracker_false';
+        $translationKeys[] = 'BotTracker_hits_by_Bot';
+        $translationKeys[] = 'BotTracker_Importfile';
+        $translationKeys[] = 'BotTracker_Import_help_format';
+        $translationKeys[] = 'BotTracker_Import_help_headline';
+        $translationKeys[] = 'BotTracker_Import_help_line1';
+        $translationKeys[] = 'BotTracker_Import_help_line2';
+        $translationKeys[] = 'BotTracker_Import_help_line3';
         $translationKeys[] = 'BotTracker_insert_db';
+        $translationKeys[] = 'BotTracker_Message_bot_inserted';
+        $translationKeys[] = 'BotTracker_Message_deleted';
+        $translationKeys[] = 'BotTracker_New';
         $translationKeys[] = 'BotTracker_NoOfActiveBots';
+        $translationKeys[] = 'BotTracker_PluginDescription';
+        $translationKeys[] = 'BotTracker_ReportDocumentation';
+        $translationKeys[] = 'BotTracker_save_changes';
+        $translationKeys[] = 'BotTracker_SelectAWebsite';
+        $translationKeys[] = 'BotTracker_send_file';
+        $translationKeys[] = 'BotTracker_Single';
+        $translationKeys[] = 'BotTracker_Top_10_Bots';
+        $translationKeys[] = 'BotTracker_Top_10_Bots_Deprecated_Report';
+        $translationKeys[] = 'BotTracker_Top10';
+        $translationKeys[] = 'BotTracker_TopTenDocumentation';
+        $translationKeys[] = 'BotTracker_true';
+        $translationKeys[] = 'BotTracker_Visit_Timestamp';
+        $translationKeys[] = 'BotTracker_Widgets';
     }
 
     public function checkBot(&$exclude, $request)
