@@ -15,7 +15,7 @@ permissions:
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, phpcs_github ]
 
 jobs:
   phpcs:
