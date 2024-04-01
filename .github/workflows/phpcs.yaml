@@ -14,8 +14,9 @@ permissions:
 
 on:
   pull_request:
+    types: [opened, synchronize, edited, ready_for_review]
   push:
-    branches: [ main, phpcs_github ]
+    branches: [ main ]
 
 jobs:
   phpcs:
