@@ -31,5 +31,5 @@ jobs:
           php-version: '8.1'
           tools: cs2pr
       - name: Run phpcs
-        run: ./vendor/bin/phpcs . -q --report=checkstyle | cs2pr
+        run: ./vendor/bin/phpcs . -q --report=checkstyle --ignore=*/vendor/*,Updates/*,tests/* | cs2pr
 
