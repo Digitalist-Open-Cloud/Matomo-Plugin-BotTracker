@@ -40,8 +40,10 @@ class GetDigiInfo extends Widget
             </a>
           </div>
           <h2 class="title">Bot Tracker</h2>
-            <p>This plugin is maintained and developed by <a href="https://digitalist.se/">Digitalist Open Cloud</a> and the Matomo community.</p>
-
+            <p>This plugin is maintained and developed by
+              <a href="https://digitalist.se/">Digitalist Open Cloud</a>
+              and the Matomo community.
+            </p>
           </div>
         </div>';
     }
