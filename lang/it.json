@@ -16,7 +16,7 @@
         "ExtraStats": "Extra Statistiche",
         "false": "No",
         "hits_by_Bot": "hits per Bot",
-        "import_db": "Importa Bot predefiniti",
+        "insert_db": "Importa Bot predefiniti",
         "Importfile": "Scegli file da importare...",
         "Import_help_format": "nomebot1|parolachiavebot1|nomebot2|parolachiavebot2|...",
         "Import_help_headline": "Formato-Dataset:",
