@@ -7,15 +7,18 @@
         "BotKeyword": "Keyword",
         "BotLastVisit": "Last visit",
         "BotName": "Bot-Name",
-        "BotTracker": "BotTracker",
+        "BotTracker": "Bot Tracker",
         "Bot_Tracker": "Bot Tracker",
         "Bot_Tracker_Report_Stats": "Bot Tracker: Extra stats",
         "Bot_Tracker_Report": "Bot Tracker: Report",
         "Bot_Tracker_Total_Over_Time_Deprecated_Report": "Bot Tracker: Totals over time (deprecated report)",
-        "Config": "BotTracker Configuration",
+        "Bot_Tracker_UntrackedBots": "Bot Tracker: Untracked bots",
+        "Bot_Tracker_UntrackedBotsDocumentation": "Bots that we do not collect statistics for, that visited the site. The useragent string could be used for tracking that bot.",
+        "Config": "Configuration",
         "Delete": "delete",
-        "DisplayWidget": "BotTracker Display",
+        "DisplayWidget": "Bot Tracker Display",
         "DisplayWidget_Deprecated_Report": "Bot Tracker: Totals over time (deprecated report)",
+        "Documentation": "Documentation",
         "Error_empty": "is empty!",
         "Error_Fileimport_Not_Even": "Number of parameter in file are not even",
         "Error_Fileimport_Upload": "Error during upload",
@@ -46,6 +49,6 @@
         "TopTenDocumentation": "This reports shows a chart of the top 10 bots on given date(s). Note that Bot Tracker does not use Segments.",
         "true": "Yes",
         "Visit_Timestamp": "Time stamp",
-        "Widgets": "BotTracker"
+        "Widgets": "Bot Tracker"
     }
 }

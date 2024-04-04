@@ -2,6 +2,7 @@
 
 namespace Piwik\Plugins\BotTracker\Widgets;
 
+use Piwik\Piwik;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
 use Piwik\Translation\Translator;
@@ -21,7 +22,7 @@ class GetDigiInfo extends Widget
     public static function configure(WidgetConfig $config)
     {
         $config->setCategoryId('General_Visitors');
-        $config->setSubcategoryId('BotTracker');
+        $config->setSubcategoryId(Piwik::translate('BotTracker_BotTracker'));
         $config->setIsWide();
         $config->setOrder(0);
         $config->setIsNotWidgetizable();

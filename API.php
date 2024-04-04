@@ -3,7 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
- * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
+ * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
@@ -452,6 +452,49 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeViewAccess();
         return $this->getBotTrackerReportDataTable($idSite, $period, $date, $segment = false);
     }
+
+
+    /**
+     * Get Data for the Report "BotStatsReport"
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getUntrackedBots($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getUntrackedBotsDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * @return DataTable
+     */
+    public static function getUntrackedBotsDataTable($idSite, $period, $date, $segment)
+    {
+        $rows = self::getUntrackedBotsData($idSite, $period, $date, $segment);
+        return self::getDataTable($rows);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getUntrackedBotsData($idSite, $period, $date, $segment)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
+        $startDate = $startDate->toString();
+        $endDate = $endDate->toString();
+        $rows = self::getDb()->fetchAll(
+            "SELECT useragent, COUNT(*) as total FROM " .
+            Common::prefixTable('bot_not_tracked') .
+            " WHERE idSite= ? AND date(date) between ? AND ? GROUP BY `useragent` ORDER BY `useragent`",
+            [$idSite, $startDate, $endDate ]
+        );
+        // // @todo: convert visit_timestamp to site
+        return $rows;
+    }
+
 
     /**
      * Get Data for the Report "BotStatsReport"

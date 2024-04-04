@@ -3,7 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
- * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
+ * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
@@ -21,12 +21,11 @@ class Menu extends \Piwik\Plugin\Menu
 {
     public function configureAdminMenu(MenuAdmin $menu)
     {
-        if (Piwik::hasUserSuperUserAccess()) {
-            $menu->addSystemItem(
-                Piwik::translate('BotTracker_Bot_Tracker'),
-                ['module' => 'BotTracker', 'action' => 'index'],
-                $orderId = 99
-            );
+        if (Piwik::isUserHasSomeAdminAccess()) {
+            $menu->registerMenuIcon('BotTracker', 'icon-drop');
+            $menu->addItem('BotTracker', null, $this->urlForAction('index'), $order = 50);
+            $menu->addItem('BotTracker', 'BotTracker_Config', $this->urlForAction('index'), $order = 51);
+            $menu->addItem('BotTracker', 'BotTracker_Documentation', $this->urlForAction('docs'), $order = 52);
         }
     }
 }

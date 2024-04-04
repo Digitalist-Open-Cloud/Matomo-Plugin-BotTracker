@@ -3,7 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
- * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
+ * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
@@ -50,7 +50,14 @@ class Controller extends ControllerAdmin
         echo $view->render();
     }
 
-
+    public function docs()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $info = "Bot Tracker Docs";
+        return $this->renderTemplate('docs', array(
+            'info' => $info
+        ));
+    }
 
     public function configReload()
     {
@@ -113,8 +120,7 @@ class Controller extends ControllerAdmin
                 $botActive = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_botActive', '0'));
                 $extraStats = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_extraStats', '0'));
 
-                if (
-                    $botName != $bot['botName'] ||
+                if ($botName != $bot['botName'] ||
                     $botKeyword != $bot['botKeyword'] ||
                     $botActive != $bot['botActive'] ||
                     $extraStats != $bot['extra_stats']
@@ -157,8 +163,7 @@ class Controller extends ControllerAdmin
             $botKeyword = trim(Request::fromRequest()->getStringParameter('new_botKeyword', ''));
             $botActive = trim(Request::fromRequest()->getStringParameter('new_botActive', '0'));
             $extraStats = trim(Request::fromRequest()->getStringParameter('new_extraStats', '0'));
-            if (
-                $botName    != '' ||
+            if ($botName    != '' ||
                 $botKeyword != ''
             ) {
                 if (empty($botName)) {

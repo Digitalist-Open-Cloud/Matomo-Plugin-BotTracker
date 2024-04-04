@@ -15,18 +15,18 @@ use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
 
 /**
- * Defines the GetBotTrackerReport report.
+ * Defines the GetBotStatsReport report.
  * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  */
-class GetBotTrackerReport extends Base
+class GetUntrackedBots extends Base
 {
     protected function init()
     {
         parent::init();
 
-        $this->name = Piwik::translate('BotTracker_Bot_Tracker_Report');
+        $this->name = Piwik::translate('BotTracker_Bot_Tracker_UntrackedBots');
         $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
-        $this->documentation = Piwik::translate('BotTracker_ReportDocumentation');
+        $this->documentation = Piwik::translate('BotTracker_Bot_Tracker_UntrackedBotsDocumentation');
         $this->order = 98;
     }
 
@@ -35,23 +35,16 @@ class GetBotTrackerReport extends Base
      */
     public function configureView(ViewDataTable $view)
     {
-        $view->config->translations['botId'] = Piwik::translate('BotTracker_BotId');
-        $view->config->translations['botName'] = Piwik::translate('BotTracker_BotName');
-        $view->config->translations['total'] = Piwik::translate('BotTracker_BotCount');
-        $view->config->columns_to_display = ['botName','total'];
-        $view->config->show_search = false;
-        $view->config->show_footer_icons = false;
-        $view->config->show_exclude_low_population = false;
-        $view->config->show_table_all_columns = false;
-        $view->config->show_insights = false;
-        $view->config->show_related_reports  = false;
-        $view->config->show_pivot_by_subtable = false;
-        $view->config->show_table_performance = false;
-        $view->config->show_all_views_icons = false;
-        $view->config->show_export = true;
         $view->requestConfig->filter_limit = 10;
         $view->requestConfig->filter_sort_column = 'total';
         $view->requestConfig->filter_sort_order = 'desc';
+        $view->config->columns_to_display = ["useragent", "total"];
+        $view->requestConfig->filter_sort_column = 'total';
+        $view->requestConfig->filter_sort_order = 'desc';
+        $view->config->show_exclude_low_population = false;
+        $view->config->show_search = false;
+        $view->config->show_footer = true;
+        $view->config->show_bar_chart = false;
     }
 
     /**
@@ -65,7 +58,13 @@ class GetBotTrackerReport extends Base
     public function configureWidgets(WidgetsList $widgetsList, ReportWidgetFactory $factory)
     {
         $config = $factory->createWidget();
-        $config->setOrder(1);
+        $config->setOrder(4);
+        $config->setIsWide();
         $widgetsList->addWidgetConfig($config);
+    }
+
+    public function isEnabled()
+    {
+        return true;
     }
 }
