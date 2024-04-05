@@ -24,9 +24,9 @@ class GetUntrackedBots extends Base
     {
         parent::init();
 
-        $this->name = Piwik::translate('BotTracker_Bot_Tracker_UntrackedBots');
+        $this->name = Piwik::translate('BotTracker_Bot_Tracker_OtherBots');
         $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
-        $this->documentation = Piwik::translate('BotTracker_Bot_Tracker_UntrackedBotsDocumentation');
+        $this->documentation = Piwik::translate('BotTracker_Bot_Tracker_OtherBotsDocumentation');
         $this->order = 98;
     }
 

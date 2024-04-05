@@ -6,7 +6,7 @@
 
 * Documentation is found at Administration -> Bot Tracker -> Documentation.
 * Bots not configured, but found with Matomo DeviceDetector (used by Matomo core), can now be collected with a system setting. System -> General settings -> Bot Tracker -> Enable logging of non configured bots, or set in config file (see Readme).
-* Report "Bot Tracker: Other bots" shows these if the setting is activated. The user agent strings of these bots could be used for adding a new Bots to track.
+* Report and widget "Bot Tracker: Other Bots" shows these if the setting is activated. The user agent strings of these bots could be used for adding a new Bots to track.
 
 ### Changed
 
