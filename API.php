@@ -9,7 +9,6 @@
 
 namespace Piwik\Plugins\BotTracker;
 
-use \Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Common;
