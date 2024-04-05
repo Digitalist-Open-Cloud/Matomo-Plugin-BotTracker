@@ -3,13 +3,12 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
- * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
+ * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
-use Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Common;
@@ -41,17 +40,17 @@ class API extends \Piwik\Plugin\API
     }
     /**
      * @return \Piwik\Plugins\BotTracker\API
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getInstance()
     {
         try {
             $instance = StaticContainer::get('BotTracker_API');
             if (!($instance instanceof API)) {
-                throw new Exception('BotTracker_API must inherit API');
+                throw new \Exception('BotTracker_API must inherit API');
             }
             self::$instance = $instance;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             self::$instance = StaticContainer::get('Piwik\Plugins\BotTracker\API');
             StaticContainer::getContainer()->set('BotTracker_API', self::$instance);
         }
@@ -452,6 +451,49 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSomeViewAccess();
         return $this->getBotTrackerReportDataTable($idSite, $period, $date, $segment = false);
     }
+
+
+    /**
+     * Get Data for the Report "BotStatsReport"
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getOtherBots($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getOtherBotsDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * @return DataTable
+     */
+    public static function getOtherBotsDataTable($idSite, $period, $date, $segment)
+    {
+        $rows = self::getOtherBotsData($idSite, $period, $date, $segment);
+        return self::getDataTable($rows);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getOtherBotsData($idSite, $period, $date, $segment)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
+        $startDate = $startDate->toString();
+        $endDate = $endDate->toString();
+        $rows = self::getDb()->fetchAll(
+            "SELECT useragent, COUNT(*) as total FROM " .
+            Common::prefixTable('bot_device_detector_bots') .
+            " WHERE idSite= ? AND date(date) between ? AND ? GROUP BY `useragent` ORDER BY `useragent`",
+            [$idSite, $startDate, $endDate ]
+        );
+        // // @todo: convert visit_timestamp to site
+        return $rows;
+    }
+
 
     /**
      * Get Data for the Report "BotStatsReport"

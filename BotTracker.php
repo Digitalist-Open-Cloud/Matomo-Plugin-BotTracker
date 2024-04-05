@@ -3,17 +3,20 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
- * @link https://github.com/digitalist-se/MatomoPlugin-BotTracker
+ * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
 use Piwik\Common;
+use Piwik\Config;
+use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
 use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
 
 class BotTracker extends \Piwik\Plugin
 {
@@ -125,6 +128,20 @@ class BotTracker extends \Piwik\Plugin
         } catch (\Exception $e) {
             throw $e;
         }
+
+        $query5 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_device_detector_bots') . '`
+        (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `idsite` INT UNSIGNED,
+            `useragent` VARCHAR(255) NOT NULL,
+            `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+             PRIMARY KEY(`id`)
+            ) DEFAULT CHARSET=utf8';
+        try {
+            $db->exec($query5);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function uninstall()
@@ -138,6 +155,8 @@ class BotTracker extends \Piwik\Plugin
         $db->query($query3);
         $query4 = "DROP TABLE `" . Common::prefixTable('bot_visits') . "` ";
         $db->query($query4);
+        $query5 = "DROP TABLE `" . Common::prefixTable('bot_device_detector_bots') . "` ";
+        $db->query($query5);
     }
 
     public function registerEvents()
@@ -169,6 +188,7 @@ class BotTracker extends \Piwik\Plugin
         $translationKeys[] = 'BotTracker_Delete';
         $translationKeys[] = 'BotTracker_DisplayWidget';
         $translationKeys[] = 'BotTracker_DisplayWidget_Deprecated_Report';
+        $translationKeys[] = 'BotTracker_Documentation';
         $translationKeys[] = 'BotTracker_Error_empty';
         $translationKeys[] = 'BotTracker_Error_Fileimport_Not_Even';
         $translationKeys[] = 'BotTracker_Error_Fileimport_Upload';
@@ -187,6 +207,8 @@ class BotTracker extends \Piwik\Plugin
         $translationKeys[] = 'BotTracker_Message_deleted';
         $translationKeys[] = 'BotTracker_New';
         $translationKeys[] = 'BotTracker_NoOfActiveBots';
+        $translationKeys[] = 'Bot_Tracker_OtherBots';
+        $translationKeys[] = 'Bot_Tracker_OtherBotsDocumentation';
         $translationKeys[] = 'BotTracker_PluginDescription';
         $translationKeys[] = 'BotTracker_ReportDocumentation';
         $translationKeys[] = 'BotTracker_save_changes';
@@ -219,7 +241,6 @@ class BotTracker extends \Piwik\Plugin
 
         $botId = $result['botId'] ?? 0;
 
-
         if ($botId > 0) {
             // New since 5.1.0
             $query = "INSERT INTO `" . Common::prefixTable('bot_visits') . "`
@@ -241,6 +262,29 @@ class BotTracker extends \Piwik\Plugin
                 // max length of useragent can be 256 Bytes
                 $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
                 $db->query($query, $params);
+            }
+        } else {
+            $userAgent = $request->getUserAgent();
+            $deviceDetector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance(
+                $userAgent,
+                $request->getClientHints()
+            );
+            $deviceDetector->parse();
+            if ($deviceDetector->isBot()) {
+                $settings = new SystemSettings();
+                $botsLogging = $settings->trackDeviceDetectorBots->getValue();
+                // If set in config, this overrides setting in UI.
+                if (Config::getInstance()->BotTracker['track_device_detector_bots'] == 1) {
+                    $botsLogging = 1;
+                }
+                if ($botsLogging) {
+                        $currentTimestamp = gmdate("Y-m-d H:i:s");
+                        $query = "INSERT INTO `" . Common::prefixTable('bot_device_detector_bots') . "`
+                        (idsite, useragent, date) VALUES (?,?,?)";
+                        $params = [$idSite, substr($userAgent, 0, 256), $currentTimestamp];
+                        $db->query($query, $params);
+                }
+                $exclude = true;
             }
         }
     }

@@ -16,7 +16,6 @@
         "ExtraStats": "Extra statistieken",
         "false": "Nee",
         "hits_by_Bot": "hits per bot",
-        "import_db": "Voeg standaard-Bots in",
         "Importfile": "Kies uploadbestand...",
         "Import_help_format": "botname1|botkeyword1|botname2|botkeyword2|...",
         "Import_help_headline": "Dataset-Format:",

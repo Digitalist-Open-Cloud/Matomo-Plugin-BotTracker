@@ -16,7 +16,6 @@
         "ExtraStats": "余分な統計",
         "false": "いいえ",
         "hits_by_Bot": "ボットによるヒット",
-        "import_db": "デフォルトボットの挿入",
         "Importfile": "インポートファイルを選択して下さい...",
         "Import_help_format": "botname1|botkeyword1|botname2|botkeyword2|...",
         "Import_help_headline": "データセット・フォーマット：",
