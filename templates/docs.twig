@@ -8,6 +8,7 @@
       <img src="plugins/BotTracker/assets/dot.png" height="40" />
     </a>
   </div>
+  <h1>Bot Tracker</h1>
   <p>This plugin is maintained and developed by
     <a href="https://digitalist.se/">Digitalist Open Cloud</a>
     and the Matomo community.
@@ -16,7 +17,40 @@
 </div>
 <div class="card">
 <div class="card-content">
-  <h2 class="card-title">Bot Tracker documentation</h2>
+  <h2 class="card-title">Documentation</h2>
+  <h3>Admin interface</h3>
+  <p>After you have installed Bot Tracker in Matomo, and you are logged in as a user with super user priviligies, go to Administration -&gt; Bot Tracker.</p>
+  <p><img src="plugins/BotTracker/assets/admin-1.png" alt="The admin interface" style="width: 100%;height: auto;" /></p>
+  <p>Bots are added per site, so you don't share bots between site 1 and 2. This separation is done so you could track different bots in different ways on different sites in Matomo, so you stay in control.</p>
+  <p>If you click &quot;Insert/update default bots&quot;, a number of bots are added if you have not added the bots before. The bots that comes with the plugin is based on the most common bots we have seen, search bots, different types of crawlers, AI bots etc. We update this bots continiuosly, and if you want to have the most common bots added, after an update of the Bot Tracker plugin, click &quot;Insert/default default bots&quot; again, and if new bots have been added in plugin, this will be added for you to track.</p>
+  <p><img src="plugins/BotTracker/assets/admin-2.png" alt="Bots added" style="width: 100%;height: auto;" /></p>
+  <h2>Adding more bots</h2>
+  <h3>Single bot</h3>
+  <p><img src="plugins/BotTracker/assets/admin-3.png" alt="Adding single bot" style="width: 100%;height: auto;" /></p>
+  <p>The Keyword is how the bot is identified, the user agent it uses (user agent you normally can see in the server logs for a visit, or in Matomo).</p>
+  <h4>File</h4>
+  <p><img src="plugins/BotTracker/assets/admin-4.png" alt="Adding bots from file upload" style="width: 100%;height: auto;" /></p>
+  <p>You can use a file to upload bots you want to track. The file should be structured like:</p>
+  <pre><code class="language-sh">botname1|botkeyword1|botname2|botkeyword2|</code></pre>
+  <p>Keyword is string used to identify the bot from the user agent. So be precise, you don't want to track &quot;Mozilla&quot;, that would exclude the most common user agent from your web analytics.</p>
+  <h3>Other bots</h3>
+  <p>Matomo comes with the Device Detector, used for identifying devices that visits your site. If you want to have stats for the bots that Matomo has identified, you could track those also with the plugin. Just enable the system settings for doing so: Administer -&gt; System -&gt; General settings -&gt; Bot Tracker, and click &quot;Enable logging for Matomo Device Detector Bots&quot;.</p>
+  <p>The use case for tracking this bots, could for example be to get the user agent for the bot, and adding it to the bots you are tracking with Bot Tracker. You only get user agent, time of visit and number of visits when you enable logging for Matomo Device Detector Bots.</p>
+  <p>You could also set this in file config, adding this to <code>config.ini.php</code>:</p>
+  <pre>[BotTracker]
+track_device_detector_bots = 1</pre>
+  <p>If you do set this in file config, you can't override it in system settings.</p>
+  <p>The report and widget for other bots is called &quot;Bot Tracker: Other Bots&quot;.</p>
+  <h3>CLI</h3>
+  <p>The plugin comes with cli commands you could use to administer Bot Tracker.</p>
+  <ul>
+  <li><code>bottracker:add-bot</code></li>
+  <li><code>bottracker:add-bot-type</code></li>
+  <li><code>bottracker:add-default-bots</code></li>
+  <li><code>bottracker:delete-bot</code></li>
+  <li><code>bottracker:list-bot-types</code></li>
+  <li><code>bottracker:list-bots</code></li>
+  </ul>
 </div>
 </div>
 </div>

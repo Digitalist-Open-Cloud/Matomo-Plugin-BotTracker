@@ -9,7 +9,7 @@
 
 namespace Piwik\Plugins\BotTracker;
 
-use Exception;
+use \Exception;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
 use Piwik\Common;
@@ -41,17 +41,17 @@ class API extends \Piwik\Plugin\API
     }
     /**
      * @return \Piwik\Plugins\BotTracker\API
-     * @throws Exception
+     * @throws \Exception
      */
     public static function getInstance()
     {
         try {
             $instance = StaticContainer::get('BotTracker_API');
             if (!($instance instanceof API)) {
-                throw new Exception('BotTracker_API must inherit API');
+                throw new \Exception('BotTracker_API must inherit API');
             }
             self::$instance = $instance;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             self::$instance = StaticContainer::get('Piwik\Plugins\BotTracker\API');
             StaticContainer::getContainer()->set('BotTracker_API', self::$instance);
         }
@@ -461,25 +461,25 @@ class API extends \Piwik\Plugin\API
      * @param string $date
      * @param bool|string $segment
      */
-    public function getUntrackedBots($idSite, $period, $date, $segment = false)
+    public function getOtherBots($idSite, $period, $date, $segment = false)
     {
         Piwik::checkUserHasSomeViewAccess();
-        return $this->getUntrackedBotsDataTable($idSite, $period, $date, $segment = false);
+        return $this->getOtherBotsDataTable($idSite, $period, $date, $segment = false);
     }
 
     /**
      * @return DataTable
      */
-    public static function getUntrackedBotsDataTable($idSite, $period, $date, $segment)
+    public static function getOtherBotsDataTable($idSite, $period, $date, $segment)
     {
-        $rows = self::getUntrackedBotsData($idSite, $period, $date, $segment);
+        $rows = self::getOtherBotsData($idSite, $period, $date, $segment);
         return self::getDataTable($rows);
     }
 
     /**
      * @return array
      */
-    public static function getUntrackedBotsData($idSite, $period, $date, $segment)
+    public static function getOtherBotsData($idSite, $period, $date, $segment)
     {
         Piwik::checkUserHasSomeViewAccess();
         list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);

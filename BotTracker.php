@@ -207,6 +207,8 @@ class BotTracker extends \Piwik\Plugin
         $translationKeys[] = 'BotTracker_Message_deleted';
         $translationKeys[] = 'BotTracker_New';
         $translationKeys[] = 'BotTracker_NoOfActiveBots';
+        $translationKeys[] = 'Bot_Tracker_OtherBots';
+        $translationKeys[] = 'Bot_Tracker_OtherBotsDocumentation';
         $translationKeys[] = 'BotTracker_PluginDescription';
         $translationKeys[] = 'BotTracker_ReportDocumentation';
         $translationKeys[] = 'BotTracker_save_changes';

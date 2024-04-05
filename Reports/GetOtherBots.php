@@ -18,7 +18,7 @@ use Piwik\Report\ReportWidgetFactory;
  * Defines the GetBotStatsReport report.
  * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  */
-class GetUntrackedBots extends Base
+class GetOtherBots extends Base
 {
     protected function init()
     {
