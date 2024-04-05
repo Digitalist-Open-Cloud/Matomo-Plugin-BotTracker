@@ -120,7 +120,8 @@ class Controller extends ControllerAdmin
                 $botActive = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_botActive', '0'));
                 $extraStats = trim(Request::fromRequest()->getStringParameter($bot['botId'] . '_extraStats', '0'));
 
-                if ($botName != $bot['botName'] ||
+                if (
+                    $botName != $bot['botName'] ||
                     $botKeyword != $bot['botKeyword'] ||
                     $botActive != $bot['botActive'] ||
                     $extraStats != $bot['extra_stats']
@@ -163,7 +164,8 @@ class Controller extends ControllerAdmin
             $botKeyword = trim(Request::fromRequest()->getStringParameter('new_botKeyword', ''));
             $botActive = trim(Request::fromRequest()->getStringParameter('new_botActive', '0'));
             $extraStats = trim(Request::fromRequest()->getStringParameter('new_extraStats', '0'));
-            if ($botName    != '' ||
+            if (
+                $botName    != '' ||
                 $botKeyword != ''
             ) {
                 if (empty($botName)) {
