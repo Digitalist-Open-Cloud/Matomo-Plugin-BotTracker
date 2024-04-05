@@ -487,7 +487,7 @@ class API extends \Piwik\Plugin\API
         $endDate = $endDate->toString();
         $rows = self::getDb()->fetchAll(
             "SELECT useragent, COUNT(*) as total FROM " .
-            Common::prefixTable('bot_not_tracked') .
+            Common::prefixTable('bot_device_detector_bots') .
             " WHERE idSite= ? AND date(date) between ? AND ? GROUP BY `useragent` ORDER BY `useragent`",
             [$idSite, $startDate, $endDate ]
         );
