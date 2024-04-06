@@ -57,7 +57,7 @@ class Updates_5_1_0 extends PiwikUpdates
 
         $migrations[] = $this->migration->db->createTable('bot_type', [
             'id' => 'INT(11) NOT NULL AUTO_INCREMENT',
-            'name' => 'VARCHAR(255) NOT NULL',
+            'name' => 'VARCHAR(256) NOT NULL',
             'date' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
 
         ], $primaryKey = 'id');

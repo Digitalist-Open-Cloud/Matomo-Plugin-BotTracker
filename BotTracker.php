@@ -79,7 +79,7 @@ class BotTracker extends \Piwik\Plugin
         $query3 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_type') . '`
         (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
-             `name` VARCHAR(255) NOT NULL,
+             `name` VARCHAR(256) NOT NULL,
              `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
              PRIMARY KEY(`id`), UNIQUE(`name`)
             ) DEFAULT CHARSET=utf8';
@@ -133,7 +133,7 @@ class BotTracker extends \Piwik\Plugin
         (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `idsite` INT UNSIGNED,
-            `useragent` VARCHAR(255) NOT NULL,
+            `useragent` VARCHAR(256) NOT NULL,
             `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
              PRIMARY KEY(`id`)
             ) DEFAULT CHARSET=utf8';
