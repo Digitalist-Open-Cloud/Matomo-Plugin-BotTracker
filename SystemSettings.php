@@ -11,17 +11,16 @@
 namespace Piwik\Plugins\BotTracker;
 
 use Piwik\Settings\FieldConfig;
+use Piwik\Settings\Plugin\SystemSettings as MatomoSystemSettings;
+use Piwik\Settings\Setting;
 
 /**
  * Defines Settings for BotTracker.
  */
-class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
+class SystemSettings extends MatomoSystemSettings
 {
 
-    /**
-     * @var \Piwik\Settings\Setting
-     */
-    public $trackDeviceDetectorBots;
+    public Setting $trackDeviceDetectorBots;
 
     protected function init()
     {

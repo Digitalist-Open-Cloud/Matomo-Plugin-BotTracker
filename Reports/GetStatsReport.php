@@ -23,7 +23,6 @@ class GetStatsReport extends Base
 {
 
     /**
-     * @param \Piwik\Plugin\ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {

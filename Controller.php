@@ -10,6 +10,7 @@
 
 namespace Piwik\Plugins\BotTracker;
 
+use Exception;
 use Piwik\Nonce;
 use Piwik\Notification\Manager as NotificationManager;
 use Piwik\Piwik;
@@ -144,7 +145,7 @@ class Controller extends ControllerAdmin
                 }
             }
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
@@ -166,7 +167,7 @@ class Controller extends ControllerAdmin
             $botActive = trim(Request::fromRequest()->getStringParameter('new_botActive', '0'));
             $extraStats = trim(Request::fromRequest()->getStringParameter('new_extraStats', '0'));
             if (
-                $botName    != '' ||
+                $botName != '' ||
                 $botKeyword != ''
             ) {
                 if (empty($botName)) {
@@ -182,7 +183,7 @@ class Controller extends ControllerAdmin
             $errorList[] = 'Bot ' . $botName . ' ' . Piwik::translate('BotTracker_Added');
 
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
@@ -202,7 +203,7 @@ class Controller extends ControllerAdmin
 
             $errorList[] = 'Bot ' . $botId . ' ' . Piwik::translate('BotTracker_Message_deleted');
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
@@ -219,7 +220,7 @@ class Controller extends ControllerAdmin
             $errorList[] = $i . " " . Piwik::translate('BotTracker_Message_bot_inserted');
 
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }

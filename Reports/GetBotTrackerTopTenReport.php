@@ -25,8 +25,6 @@ class GetBotTrackerTopTenReport extends Base
     /**
      * Here you can configure how your report should be displayed. For instance whether your report supports a search
      * etc. You can also change the default request config. For instance change how many rows are displayed by default.
-     *
-     * @param \Piwik\Plugin\ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {
@@ -34,7 +32,7 @@ class GetBotTrackerTopTenReport extends Base
         $view->config->show_footer_icons = true;
         $view->config->show_insights = false;
         $view->config->selectable_columns = ["value"];
-        $view->config->show_related_reports  = false;
+        $view->config->show_related_reports = false;
         $view->config->show_table_all_columns = false;
     }
 

@@ -23,7 +23,6 @@ class GetTop10 extends Base
 {
 
     /**
-     * @param \Piwik\Plugin\ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {
@@ -31,7 +30,7 @@ class GetTop10 extends Base
         $view->config->show_footer_icons = true;
         $view->config->show_insights = false;
         $view->config->selectable_columns = ["value"];
-        $view->config->show_related_reports  = false;
+        $view->config->show_related_reports = false;
         $view->config->show_table_all_columns = false;
     }
 

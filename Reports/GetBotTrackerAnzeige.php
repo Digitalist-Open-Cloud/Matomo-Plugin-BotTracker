@@ -27,7 +27,6 @@ class GetBotTrackerAnzeige extends Base
 {
 
     /**
-     * @param \Piwik\Plugin\ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {
@@ -40,7 +39,7 @@ class GetBotTrackerAnzeige extends Base
         $view->config->show_exclude_low_population = false;
         $view->config->show_table_all_columns = false;
         $view->config->show_insights = false;
-        $view->config->show_related_reports  = false;
+        $view->config->show_related_reports = false;
         $view->config->show_pivot_by_subtable = false;
         $view->config->show_table_performance = false;
         $view->config->show_all_views_icons = false;

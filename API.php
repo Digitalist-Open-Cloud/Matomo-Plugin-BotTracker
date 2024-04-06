@@ -10,6 +10,7 @@
 
 namespace Piwik\Plugins\BotTracker;
 
+use Exception;
 use Piwik\Common;
 use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
@@ -40,7 +41,7 @@ class API extends \Piwik\Plugin\API
                 [$botId]
             );
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
             return false;
         }
@@ -152,8 +153,7 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasSomeViewAccess();
         $db = self::getDb();
-        $rows = $db->fetchAll("SELECT `name`, `id` FROM " . Common::prefixTable('bot_type') . " ORDER BY `name`");
-        return $rows;
+        return $db->fetchAll("SELECT `name`, `id` FROM " . Common::prefixTable('bot_type') . " ORDER BY `name`");
     }
 
     public function addBotType($type)
@@ -165,7 +165,7 @@ class API extends \Piwik\Plugin\API
                 'INSERT INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
             );
             $db->query($sql, [$type]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -179,10 +179,10 @@ class API extends \Piwik\Plugin\API
         try {
             $instance = StaticContainer::get('BotTracker_API');
             if (!($instance instanceof API)) {
-                throw new \Exception('BotTracker_API must inherit API');
+                throw new Exception('BotTracker_API must inherit API');
             }
             self::$instance = $instance;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             self::$instance = StaticContainer::get('Piwik\Plugins\BotTracker\API');
             StaticContainer::getContainer()->set('BotTracker_API', self::$instance);
         }
@@ -294,15 +294,13 @@ class API extends \Piwik\Plugin\API
         // Remove zero results, and limit to ten.
         $pie = array_diff($pie, [0]);
         arsort($pie);
-        $rows = array_slice($pie, 0, 10);
-
-        return $rows;
+        return array_slice($pie, 0, 10);
     }
 
     public static function getAllBotDataForConfig($idsite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = self::getDb()->fetchAll(
+        return self::getDb()->fetchAll(
             "SELECT `idsite`, `botId`,
             `botName`, `botActive`,
             `botKeyword`, `extra_stats`,
@@ -311,8 +309,6 @@ class API extends \Piwik\Plugin\API
             " WHERE `idsite` = ? ORDER BY `botId`",
             [$idsite]
         );
-
-        return $rows;
     }
 
     public static function getActiveBotData($idSite)
@@ -394,7 +390,7 @@ class API extends \Piwik\Plugin\API
                 $botType]
             );
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
             return false;
         }
@@ -512,14 +508,12 @@ class API extends \Piwik\Plugin\API
         list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
         $startDate = $startDate->toString();
         $endDate = $endDate->toString();
-        $rows = self::getDb()->fetchAll(
+        return self::getDb()->fetchAll(
             "SELECT useragent, COUNT(*) as total FROM " .
             Common::prefixTable('bot_device_detector_bots') .
             " WHERE idSite= ? AND date(date) between ? AND ? GROUP BY `useragent` ORDER BY `useragent`",
             [$idSite, $startDate, $endDate]
         );
-        // // @todo: convert visit_timestamp to site
-        return $rows;
     }
 
     /**
@@ -619,7 +613,7 @@ class API extends \Piwik\Plugin\API
                         $row['botLastVisit'] = date('Y-m-d H:i:s', $botLastVisit);
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
             return false;
         }

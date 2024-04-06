@@ -18,7 +18,7 @@ class GetDigiInfo extends Widget
           <div class="card-content">
           <div style="float:right">
             <a style="text-decoration:none" href="https://digitalist.se/">
-              <img src="' . $imageDir  . 'dot.png" height="40" />
+              <img src="' . $imageDir . 'dot.png" height="40" />
             </a>
           </div>
           <h2 class="title">Bot Tracker</h2>
