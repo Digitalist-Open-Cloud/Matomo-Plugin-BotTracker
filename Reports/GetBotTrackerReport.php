@@ -3,6 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
@@ -11,8 +12,8 @@ namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Piwik;
 use Piwik\Plugin\ViewDataTable;
-use Piwik\Widget\WidgetsList;
 use Piwik\Report\ReportWidgetFactory;
+use Piwik\Widget\WidgetsList;
 
 /**
  * Defines the GetBotTrackerReport report.
@@ -20,25 +21,16 @@ use Piwik\Report\ReportWidgetFactory;
  */
 class GetBotTrackerReport extends Base
 {
-    protected function init()
-    {
-        parent::init();
-
-        $this->name = Piwik::translate('BotTracker_Bot_Tracker_Report');
-        $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
-        $this->documentation = Piwik::translate('BotTracker_ReportDocumentation');
-        $this->order = 98;
-    }
 
     /**
-     * @param ViewDataTable $view
+     * @param \Piwik\Plugin\ViewDataTable $view
      */
     public function configureView(ViewDataTable $view)
     {
         $view->config->translations['botId'] = Piwik::translate('BotTracker_BotId');
         $view->config->translations['botName'] = Piwik::translate('BotTracker_BotName');
         $view->config->translations['total'] = Piwik::translate('BotTracker_BotCount');
-        $view->config->columns_to_display = ['botName','total'];
+        $view->config->columns_to_display = ['botName', 'total'];
         $view->config->show_search = false;
         $view->config->show_footer_icons = false;
         $view->config->show_exclude_low_population = false;
@@ -68,4 +60,15 @@ class GetBotTrackerReport extends Base
         $config->setOrder(1);
         $widgetsList->addWidgetConfig($config);
     }
+
+    protected function init()
+    {
+        parent::init();
+
+        $this->name = Piwik::translate('BotTracker_Bot_Tracker_Report');
+        $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
+        $this->documentation = Piwik::translate('BotTracker_ReportDocumentation');
+        $this->order = 98;
+    }
+
 }

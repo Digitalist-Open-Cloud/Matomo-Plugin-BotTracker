@@ -3,6 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
@@ -13,24 +14,19 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
+use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
-use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
-use Piwik\DeviceDetector\DeviceDetectorFactory;
 
 class BotTracker extends \Piwik\Plugin
 {
-    private function getDb()
-    {
-        return Db::get();
-    }
 
     public function install()
     {
         $tableExists = false;
         $db = $this->getDb();
 
-        // create new table "bot_db"
         $query = "CREATE TABLE `" . Common::prefixTable('bot_db') . "`
 						 (`botId` INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 						  `idsite` INTEGER(10) UNSIGNED NOT NULL,
@@ -57,7 +53,6 @@ class BotTracker extends \Piwik\Plugin
                 BotTrackerAPI::insertDefaultBots($site['idsite']);
             }
         }
-        // Create bot_db_stat table.
         $query2 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_db_stat') . '`
 						(
 						`visitId` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -75,7 +70,6 @@ class BotTracker extends \Piwik\Plugin
             throw $e;
         }
 
-        // Create bot_type table
         $query3 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_type') . '`
         (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -260,7 +254,7 @@ class BotTracker extends \Piwik\Plugin
                 $query = "INSERT INTO `" . Common::prefixTable('bot_db_stat') . "`
 					(idsite, botid, page, visit_timestamp, useragent) VALUES (?,?,?,?,?)";
                 // max length of useragent can be 256 Bytes
-                $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
+                $params = [$idSite, $botId, $currentUrl, $currentTimestamp, substr($userAgent, 0, 256)];
                 $db->query($query, $params);
             }
         } else {
@@ -288,4 +282,10 @@ class BotTracker extends \Piwik\Plugin
             }
         }
     }
+
+    private function getDb()
+    {
+        return Db::get();
+    }
+
 }

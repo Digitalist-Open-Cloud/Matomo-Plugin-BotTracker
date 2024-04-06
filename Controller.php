@@ -3,6 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
@@ -12,14 +13,15 @@ namespace Piwik\Plugins\BotTracker;
 use Piwik\Nonce;
 use Piwik\Notification\Manager as NotificationManager;
 use Piwik\Piwik;
-use Piwik\View;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
-use Piwik\Plugins\BotTracker\API as APIBotTracker;
-use Piwik\Request;
 use Piwik\Plugin\ControllerAdmin;
+use Piwik\Plugins\BotTracker\API as APIBotTracker;
+use Piwik\Plugins\SitesManager\API as APISitesManager;
+use Piwik\Request;
+use Piwik\View;
 
 class Controller extends ControllerAdmin
 {
+
     public string $nonce;
     /**
      * @property string $nonce
@@ -55,7 +57,7 @@ class Controller extends ControllerAdmin
         Piwik::checkUserHasSomeViewAccess();
         $info = "Bot Tracker Docs";
         return $this->renderTemplate('docs', array(
-            'info' => $info
+            'info' => $info,
         ));
     }
 
@@ -147,7 +149,6 @@ class Controller extends ControllerAdmin
         }
     }
 
-
     public function addNew()
     {
         try {
@@ -222,4 +223,5 @@ class Controller extends ControllerAdmin
             echo $e;
         }
     }
+
 }

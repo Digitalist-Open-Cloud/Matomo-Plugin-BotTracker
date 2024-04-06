@@ -45,7 +45,7 @@ Set up test environment:
 
 ```bash
 ./console development:enable
-./console config:set --section=tests --key=http_host --value=web
+./console config:set --section=tests --key=http_host --value=matomo.loc
 ./console config:set --section=tests --key=request_uri --value=/
 ./console config:set --section=database_tests --key=host --value=db
 ./console config:set --section=database_tests --key=username --value=root

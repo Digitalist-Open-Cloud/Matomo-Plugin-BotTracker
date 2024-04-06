@@ -3,6 +3,7 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
@@ -10,14 +11,15 @@
 namespace Piwik\Plugins\BotTracker\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Piwik\Plugins\BotTracker\API;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Add new bot.
  */
 class AddBot extends ConsoleCommand
 {
+
     protected function configure()
     {
         $HelpText = 'The <info>%command.name%</info> command will add a new bot.
@@ -83,4 +85,5 @@ To run:
         $output->write("<info>New bot added, $name</info>\n");
         return self::SUCCESS;
     }
+
 }
