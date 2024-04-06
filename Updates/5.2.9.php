@@ -39,9 +39,10 @@ class Updates_5_2_9 extends PiwikUpdates
         $migrations[] = $this->migration->db->createTable('bot_device_detector_bots', [
             'id' => 'INT(11) NOT NULL AUTO_INCREMENT',
             'idsite' => 'INT UNSIGNED',
-            'useragent' => 'VARCHAR(255) NOT NULL',
+            'useragent' => 'VARCHAR(256) NOT NULL',
             'date' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
         ], $primaryKey = ['id']);
+        $migrations[] = $this->migration->db->changeColumnType('bot_type', 'name', 'VARCHAR(256)');
         return $migrations;
     }
 
