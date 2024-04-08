@@ -18,9 +18,9 @@ use Piwik\Date;
 use Piwik\Db;
 use Piwik\Period;
 use Piwik\Piwik;
+use Piwik\Plugin\API as PiwikAPI;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
 use Piwik\Site;
-use Piwik\Plugin\API as PiwikAPI;
 
 /**
  * @package Matomo_BotTracker
