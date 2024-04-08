@@ -108,7 +108,7 @@ Matomo 5 compatibility fixes.
 
 * change order of columns in the BotTracker report (issue #68)
 
-## [2.00] - 2020-12-05
+## [2.00] - unknown2-05
 
 * upgrade to Matomo 4 (issue #66)
 

@@ -15,9 +15,7 @@ use Piwik\Piwik;
 use Piwik\Plugin\Menu as MatomoMenu;
 
 /**
- * This class allows you to add, remove or rename menu items.
- * To configure a menu (such as Admin Menu, Reporting Menu, User Menu...) simply call the corresponding methods as
- * described in the API-Reference http://developer.piwik.org/api-reference/Piwik/Menu/MenuAbstract
+ * @package Matomo_BotTracker
  */
 class Menu extends MatomoMenu
 {

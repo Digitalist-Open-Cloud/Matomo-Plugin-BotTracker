@@ -21,6 +21,9 @@ use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
 
+/**
+ * @package Matomo_BotTracker
+ */
 class BotTracker extends Plugin
 {
 

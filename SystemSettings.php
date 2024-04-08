@@ -15,7 +15,7 @@ use Piwik\Settings\Plugin\SystemSettings as MatomoSystemSettings;
 use Piwik\Settings\Setting;
 
 /**
- * Defines Settings for BotTracker.
+ * @package Matomo_BotTracker
  */
 class SystemSettings extends MatomoSystemSettings
 {

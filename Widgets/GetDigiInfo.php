@@ -6,6 +6,9 @@ use Piwik\Piwik;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
 
+/**
+ * @package Matomo_BotTracker
+ */
 class GetDigiInfo extends Widget
 {
 

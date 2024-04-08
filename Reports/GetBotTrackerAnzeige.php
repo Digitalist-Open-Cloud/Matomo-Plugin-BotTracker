@@ -22,6 +22,7 @@ use Piwik\Widget\WidgetsList;
  * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
  *
  * @deprecated since v5.2.0, will be removed in v5.3.0
+ * @package Matomo_BotTracker
  */
 class GetBotTrackerAnzeige extends Base
 {

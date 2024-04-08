@@ -20,6 +20,9 @@ use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Request;
 use Piwik\View;
 
+/**
+ * @package Matomo_BotTracker
+ */
 class Controller extends ControllerAdmin
 {
 

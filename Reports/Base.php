@@ -12,6 +12,9 @@ namespace Piwik\Plugins\BotTracker\Reports;
 
 use Piwik\Plugin\Report;
 
+/**
+ * @package Matomo_BotTracker
+ */
 abstract class Base extends Report
 {
 

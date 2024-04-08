@@ -18,6 +18,7 @@ use Piwik\Widget\WidgetsList;
 /**
  * Defines the class GetBotTrackerTopTenReport report.
  * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
+ * @package Matomo_BotTracker
  */
 class GetBotTrackerTopTenReport extends Base
 {
