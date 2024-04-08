@@ -25,7 +25,12 @@ class Menu extends \Piwik\Plugin\Menu
             $menu->registerMenuIcon('BotTracker_BotTracker', 'icon-drop');
             $menu->addItem('BotTracker_BotTracker', null, $this->urlForAction('index'), $order = 50);
             $menu->addItem('BotTracker_BotTracker', 'BotTracker_Config', $this->urlForAction('index'), $order = 51);
-            $menu->addItem('BotTracker_BotTracker', 'BotTracker_Documentation', $this->urlForAction('docs'), $order = 52);
+            $menu->addItem(
+                'BotTracker_BotTracker',
+                'BotTracker_Documentation',
+                $this->urlForAction('docs'),
+                $order = 52
+            );
         }
     }
 }
