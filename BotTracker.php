@@ -107,7 +107,7 @@ class BotTracker extends \Piwik\Plugin
         try {
             foreach ($botTypes as $type) {
                 $sql = sprintf(
-                    'INSERT INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
+                    'INSERT IGNORE INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
                 );
                 $db->query($sql, [$type]);
             }
