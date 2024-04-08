@@ -3,34 +3,35 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
+use Exception;
 use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
+use Piwik\DeviceDetector\DeviceDetectorFactory;
+use Piwik\Plugin;
+use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
-use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
-use Piwik\DeviceDetector\DeviceDetectorFactory;
 
-class BotTracker extends \Piwik\Plugin
+/**
+ * @package Matomo_BotTracker
+ */
+class BotTracker extends Plugin
 {
-    private function getDb()
-    {
-        return Db::get();
-    }
 
     public function install()
     {
         $tableExists = false;
         $db = $this->getDb();
 
-        // create new table "bot_db"
         $query = "CREATE TABLE `" . Common::prefixTable('bot_db') . "`
 						 (`botId` INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 						  `idsite` INTEGER(10) UNSIGNED NOT NULL,
@@ -47,7 +48,7 @@ class BotTracker extends \Piwik\Plugin
         // if the table already exist do not throw error. Could be installed twice...
         try {
             $db->exec($query);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $tableExists = true;
         }
 
@@ -57,8 +58,7 @@ class BotTracker extends \Piwik\Plugin
                 BotTrackerAPI::insertDefaultBots($site['idsite']);
             }
         }
-        // Create bot_db_stat table.
-        $query2 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_db_stat') . '`
+        $query2 = 'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_db_stat') . '`
 						(
 						`visitId` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			 			`botId` INTEGER(10) UNSIGNED NOT NULL,
@@ -71,12 +71,11 @@ class BotTracker extends \Piwik\Plugin
 						)  DEFAULT CHARSET=utf8';
         try {
             $db->exec($query2);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
-        // Create bot_type table
-        $query3 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_type') . '`
+        $query3 = 'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_type') . '`
         (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
              `name` VARCHAR(256) NOT NULL,
@@ -85,7 +84,7 @@ class BotTracker extends \Piwik\Plugin
             ) DEFAULT CHARSET=utf8';
         try {
             $db->exec($query3);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
@@ -111,11 +110,11 @@ class BotTracker extends \Piwik\Plugin
                 );
                 $db->query($sql, [$type]);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
-        $query4 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_visits') . '`
+        $query4 = 'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_visits') . '`
         (
             `id` BIGINT UNSIGNED AUTO_INCREMENT,
             `botId` INT UNSIGNED,
@@ -125,11 +124,11 @@ class BotTracker extends \Piwik\Plugin
             ) DEFAULT CHARSET=utf8';
         try {
             $db->exec($query4);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
 
-        $query5 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_device_detector_bots') . '`
+        $query5 = 'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_device_detector_bots') . '`
         (
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `idsite` INT UNSIGNED,
@@ -139,7 +138,7 @@ class BotTracker extends \Piwik\Plugin
             ) DEFAULT CHARSET=utf8';
         try {
             $db->exec($query5);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -162,7 +161,7 @@ class BotTracker extends \Piwik\Plugin
     public function registerEvents()
     {
         return [
-            'Tracker.isExcludedVisit'  => 'checkBot',
+            'Tracker.isExcludedVisit' => 'checkBot',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
         ];
     }
@@ -260,7 +259,7 @@ class BotTracker extends \Piwik\Plugin
                 $query = "INSERT INTO `" . Common::prefixTable('bot_db_stat') . "`
 					(idsite, botid, page, visit_timestamp, useragent) VALUES (?,?,?,?,?)";
                 // max length of useragent can be 256 Bytes
-                $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
+                $params = [$idSite, $botId, $currentUrl, $currentTimestamp, substr($userAgent, 0, 256)];
                 $db->query($query, $params);
             }
         } else {
@@ -288,4 +287,10 @@ class BotTracker extends \Piwik\Plugin
             }
         }
     }
+
+    private function getDb()
+    {
+        return Db::get();
+    }
+
 }

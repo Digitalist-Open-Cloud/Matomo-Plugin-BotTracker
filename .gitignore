@@ -1,2 +1,5 @@
 vendor
 tests/.phpunit.result.cache
+docs/docs.md
+composer.lock
+usage

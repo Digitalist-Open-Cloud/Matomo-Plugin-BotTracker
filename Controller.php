@@ -3,23 +3,29 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
+use Exception;
 use Piwik\Nonce;
 use Piwik\Notification\Manager as NotificationManager;
 use Piwik\Piwik;
-use Piwik\View;
-use Piwik\Plugins\SitesManager\API as APISitesManager;
-use Piwik\Plugins\BotTracker\API as APIBotTracker;
-use Piwik\Request;
 use Piwik\Plugin\ControllerAdmin;
+use Piwik\Plugins\BotTracker\API as APIBotTracker;
+use Piwik\Plugins\SitesManager\API as APISitesManager;
+use Piwik\Request;
+use Piwik\View;
 
+/**
+ * @package Matomo_BotTracker
+ */
 class Controller extends ControllerAdmin
 {
+
     public string $nonce;
     /**
      * @property string $nonce
@@ -55,7 +61,7 @@ class Controller extends ControllerAdmin
         Piwik::checkUserHasSomeViewAccess();
         $info = "Bot Tracker Docs";
         return $this->renderTemplate('docs', array(
-            'info' => $info
+            'info' => $info,
         ));
     }
 
@@ -142,11 +148,10 @@ class Controller extends ControllerAdmin
                 }
             }
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
-
 
     public function addNew()
     {
@@ -165,7 +170,7 @@ class Controller extends ControllerAdmin
             $botActive = trim(Request::fromRequest()->getStringParameter('new_botActive', '0'));
             $extraStats = trim(Request::fromRequest()->getStringParameter('new_extraStats', '0'));
             if (
-                $botName    != '' ||
+                $botName != '' ||
                 $botKeyword != ''
             ) {
                 if (empty($botName)) {
@@ -181,7 +186,7 @@ class Controller extends ControllerAdmin
             $errorList[] = 'Bot ' . $botName . ' ' . Piwik::translate('BotTracker_Added');
 
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
@@ -201,7 +206,7 @@ class Controller extends ControllerAdmin
 
             $errorList[] = 'Bot ' . $botId . ' ' . Piwik::translate('BotTracker_Message_deleted');
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
@@ -218,8 +223,9 @@ class Controller extends ControllerAdmin
             $errorList[] = $i . " " . Piwik::translate('BotTracker_Message_bot_inserted');
 
             $this->index($siteID, $errorList);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e;
         }
     }
+
 }

@@ -3,31 +3,32 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
-use Piwik\Settings\Setting;
 use Piwik\Settings\FieldConfig;
+use Piwik\Settings\Plugin\SystemSettings as MatomoSystemSettings;
+use Piwik\Settings\Setting;
 
 /**
- * Defines Settings for BotTracker.
+ * @package Matomo_BotTracker
  */
-class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
+class SystemSettings extends MatomoSystemSettings
 {
-    /** @var Setting */
-    public $trackDeviceDetectorBots;
+
+    public Setting $trackDeviceDetectorBots;
 
     protected function init()
     {
         $this->trackDeviceDetectorBots = $this->trackDeviceDetectorBots();
     }
 
-
     /**
-     * @return Setting
+     * @return \Piwik\Settings\Setting
      */
     private function trackDeviceDetectorBots()
     {
@@ -43,4 +44,5 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             }
         );
     }
+
 }
