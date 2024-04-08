@@ -18,6 +18,7 @@ use Piwik\Plugin\ViewDataTable;
  * Defines the GetTop10 report.
  *
  * See {@link https://developer.matomo.org/api-reference/Piwik/Plugin/Report} for more information.
+ *
  * @package Matomo_BotTracker
  */
 class GetTop10 extends Base

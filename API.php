@@ -3,41 +3,174 @@
 /**
  * BotTracker, a Matomo plugin by Digitalist Open Tech
  * Based on the work of Thomas--F (https://github.com/Thomas--F)
+ *
  * @link https://github.com/digitalist-se/BotTracker
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
 namespace Piwik\Plugins\BotTracker;
 
-use Piwik\Container\StaticContainer;
-use Piwik\Db;
+use Exception;
 use Piwik\Common;
+use Piwik\Container\StaticContainer;
 use Piwik\DataTable;
-use Piwik\Site;
 use Piwik\Date;
-use Piwik\Piwik;
+use Piwik\Db;
 use Piwik\Period;
+use Piwik\Piwik;
 use Piwik\Plugins\CoreVisualizations\Visualizations\JqplotGraph\Evolution;
+use Piwik\Site;
+use Piwik\Plugin\API as PiwikAPI;
 
 /**
  * @package Matomo_BotTracker
  */
-class API extends \Piwik\Plugin\API
+class API extends PiwikAPI
 {
+
     private static $instance = null;
 
-    private static function getDb()
+    public function deleteBot($botId)
     {
-        return Db::get();
+        Piwik::checkUserHasSuperUserAccess();
+        try {
+            $db = self::getDb();
+            $db->query(
+                "DELETE FROM `" .
+                Common::prefixTable('bot_db') .
+                "` WHERE `botId` = ?",
+                [$botId]
+            );
+            return true;
+        } catch (Exception $e) {
+            throw $e;
+            return false;
+        }
     }
 
     /**
-     * @return DataTable
+     * Get Data for the Report "Top10"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return \Piwik\DataTable
      */
-    private static function getDataTable($rows)
+    public function getTop10($idSite, $period, $date, $segment = false)
     {
-        return DataTable::makeFromIndexedArray($rows);
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getAllBotDataPie($idSite);
     }
+
+    /**
+     * Get Data for the Report "BotTracker"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return \Piwik\DataTable
+     */
+    public function getBotTracker($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getAllBotData($idSite);
+    }
+
+    /**
+     * Get Data for the Report "BotTrackerReport"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getBotTrackerReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getBotTrackerReportDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * Get Data for the Report "BotStatsReport"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getOtherBots($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getOtherBotsDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * Get Data for the Report "BotStatsReport"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     */
+    public function getStatsReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getStatsReportDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * Get Data for the Report "BotTrackerReport"
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return \Piwik\DataTable
+     */
+    public function getBotTrackerTopTenReport($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getBotTrackerTopTenReportPieDataTable($idSite, $period, $date, $segment = false);
+    }
+
+    /**
+     * Get Data for Dashboard-Widget
+     *
+     * @param int $idSite
+     * @param string $period
+     * @param string $date
+     * @param bool|string $segment
+     * @return \Piwik\DataTable
+     */
+    public function getBotTrackerAnzeige($idSite, $period, $date, $segment = false)
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        return $this->getActiveBotData($idSite);
+    }
+
+    public function getBotTypes()
+    {
+        Piwik::checkUserHasSomeViewAccess();
+        $db = self::getDb();
+        return $db->fetchAll("SELECT `name`, `id` FROM " . Common::prefixTable('bot_type') . " ORDER BY `name`");
+    }
+
+    public function addBotType($type)
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        try {
+            $db = self::getDb();
+            $sql = sprintf(
+                'INSERT INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
+            );
+            $db->query($sql, [$type]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
     /**
      * @return \Piwik\Plugins\BotTracker\API
      * @throws \Exception
@@ -47,10 +180,10 @@ class API extends \Piwik\Plugin\API
         try {
             $instance = StaticContainer::get('BotTracker_API');
             if (!($instance instanceof API)) {
-                throw new \Exception('BotTracker_API must inherit API');
+                throw new Exception('BotTracker_API must inherit API');
             }
             self::$instance = $instance;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             self::$instance = StaticContainer::get('Piwik\Plugins\BotTracker\API');
             StaticContainer::getContainer()->set('BotTracker_API', self::$instance);
         }
@@ -72,7 +205,7 @@ class API extends \Piwik\Plugin\API
     }
 
     /**
-     * @return DataTable
+     * @return \Piwik\DataTable
      */
     public static function getBotTrackerReportDataTable($idSite, $period, $date, $segment)
     {
@@ -134,9 +267,9 @@ class API extends \Piwik\Plugin\API
         // For some reason, we are off by one, add an dummy bot in end.
         // @todo: Look into why this is needed.
         $dummy = [
-            'botName' => 'dummy',
-            'botId' => 0,
             'botCount' => 0,
+            'botId' => 0,
+            'botName' => 'dummy',
         ];
         array_push($rows, $dummy);
         // Get totals of a bot number.
@@ -162,15 +295,13 @@ class API extends \Piwik\Plugin\API
         // Remove zero results, and limit to ten.
         $pie = array_diff($pie, [0]);
         arsort($pie);
-        $rows = array_slice($pie, 0, 10);
-
-        return $rows;
+        return array_slice($pie, 0, 10);
     }
 
     public static function getAllBotDataForConfig($idsite)
     {
         Piwik::checkUserHasSomeViewAccess();
-        $rows = self::getDb()->fetchAll(
+        return self::getDb()->fetchAll(
             "SELECT `idsite`, `botId`,
             `botName`, `botActive`,
             `botKeyword`, `extra_stats`,
@@ -179,10 +310,7 @@ class API extends \Piwik\Plugin\API
             " WHERE `idsite` = ? ORDER BY `botId`",
             [$idsite]
         );
-
-        return $rows;
     }
-
 
     public static function getActiveBotData($idSite)
     {
@@ -263,72 +391,71 @@ class API extends \Piwik\Plugin\API
                 $botType]
             );
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
             return false;
         }
     }
 
-
     public static function defaultBots()
     {
         $botList = [];
-        $botList[] = ['Amazonbot','Amazonbot'];
-        $botList[] = ['Qualys','Qualys'];
-        $botList[] = ['bingbot','bingbot'];
-        $botList[] = ['YandexBot','YandexBot'];
-        $botList[] = ['AhrefsBot','AhrefsBot'];
-        $botList[] = ['Ahrefs','Ahrefs'];
-        $botList[] = ['Scrapy','Scrapy'];
-        $botList[] = ['Googlebot-Image','Google-Image'];
-        $botList[] = ['Googlebot-News','Googlebot-News'];
-        $botList[] = ['Googlebot-Video','Googlebot-Video'];
-        $botList[] = ['Storebot-Google','Storebot-Google'];
-        $botList[] = ['Google-InspectionTool','Google-InspectionTool'];
-        $botList[] = ['Google-Extended','Google-Extended'];
-        $botList[] = ['GoogleOther','GoogleOther'];
-        $botList[] = ['APIs-Google','APIs-Google'];
-        $botList[] = ['AdsBot-Google-Mobile','AdsBot-Google-Mobile'];
-        $botList[] = ['AdsBot-Google','AdsBot-Google'];
-        $botList[] = ['Mediapartners-Google','Google AdSense'];
-        $botList[] = ['Google-Safety','Google-Safety'];
-        $botList[] = ['Googlebot','Googlebot'];
-        $botList[] = ['Google-Read-Aloud','Google-Read-Aloud'];
-        $botList[] = ['Google-Site-Verification','Google-Site-Verification'];
-        $botList[] = ['AdIdxBot','AdIdxBot'];
-        $botList[] = ['NewRelic','NewRelic'];
-        $botList[] = ['Detectify','Detectify'];
-        $botList[] = ['UptimeRobot','UptimeRobot'];
-        $botList[] = ['SendGrid','SendGrid'];
-        $botList[] = ['Applebot','Applebot'];
-        $botList[] = ['PinterestBot','PinterestBot'];
-        $botList[] = ['Pingdom','Pingdom'];
-        $botList[] = ['Barkrowler','Barkrowler'];
-        $botList[] = ['SEMrush','SEMrush'];
-        $botList[] = ['GPTBot','GPTBot'];
-        $botList[] = ['ChatGPT-User','ChatGPT-User'];
-        $botList[] = ['Bytespider','Bytespider'];
-        $botList[] = ['CCBot','CCBot'];
-        $botList[] = ['FacebookBot','FacebookBot'];
-        $botList[] = ['Google-Extended','Google-Extended'];
-        $botList[] = ['Site24x7','Site24x7'];
-        $botList[] = ['Stripe','Stripe'];
-        $botList[] = ['Slackbot','Slackbot'];
-        $botList[] = ['Proximic','Proximic'];
-        $botList[] = ['okhttp','okhttp'];
-        $botList[] = ['Python','Python'];
-        $botList[] = ['SemrushBot','SemrushBot'];
-        $botList[] = ['Chrome-Lighthouse','Chrome-Lighthouse'];
-        $botList[] = ['Axios','Axios'];
-        $botList[] = ['PetalBot','PetalBot'];
-        $botList[] = ['CriteoBot','CriteoBot'];
-        $botList[] = ['Baidu','Baidu'];
-        $botList[] = ['ContentKing','ContentKing'];
-        $botList[] = ['IAS crawler','IAS crawler'];
-        $botList[] = ['Sucuri','Sucuri'];
-        $botList[] = ['Seekport','Seekport'];
-        $botList[] = ['Sogou','Sogou'];
-        $botList[] = ['YahooMailProxy','YahooMailProxy'];
+        $botList[] = ['Amazonbot', 'Amazonbot'];
+        $botList[] = ['Qualys', 'Qualys'];
+        $botList[] = ['bingbot', 'bingbot'];
+        $botList[] = ['YandexBot', 'YandexBot'];
+        $botList[] = ['AhrefsBot', 'AhrefsBot'];
+        $botList[] = ['Ahrefs', 'Ahrefs'];
+        $botList[] = ['Scrapy', 'Scrapy'];
+        $botList[] = ['Googlebot-Image', 'Google-Image'];
+        $botList[] = ['Googlebot-News', 'Googlebot-News'];
+        $botList[] = ['Googlebot-Video', 'Googlebot-Video'];
+        $botList[] = ['Storebot-Google', 'Storebot-Google'];
+        $botList[] = ['Google-InspectionTool', 'Google-InspectionTool'];
+        $botList[] = ['Google-Extended', 'Google-Extended'];
+        $botList[] = ['GoogleOther', 'GoogleOther'];
+        $botList[] = ['APIs-Google', 'APIs-Google'];
+        $botList[] = ['AdsBot-Google-Mobile', 'AdsBot-Google-Mobile'];
+        $botList[] = ['AdsBot-Google', 'AdsBot-Google'];
+        $botList[] = ['Mediapartners-Google', 'Google AdSense'];
+        $botList[] = ['Google-Safety', 'Google-Safety'];
+        $botList[] = ['Googlebot', 'Googlebot'];
+        $botList[] = ['Google-Read-Aloud', 'Google-Read-Aloud'];
+        $botList[] = ['Google-Site-Verification', 'Google-Site-Verification'];
+        $botList[] = ['AdIdxBot', 'AdIdxBot'];
+        $botList[] = ['NewRelic', 'NewRelic'];
+        $botList[] = ['Detectify', 'Detectify'];
+        $botList[] = ['UptimeRobot', 'UptimeRobot'];
+        $botList[] = ['SendGrid', 'SendGrid'];
+        $botList[] = ['Applebot', 'Applebot'];
+        $botList[] = ['PinterestBot', 'PinterestBot'];
+        $botList[] = ['Pingdom', 'Pingdom'];
+        $botList[] = ['Barkrowler', 'Barkrowler'];
+        $botList[] = ['SEMrush', 'SEMrush'];
+        $botList[] = ['GPTBot', 'GPTBot'];
+        $botList[] = ['ChatGPT-User', 'ChatGPT-User'];
+        $botList[] = ['Bytespider', 'Bytespider'];
+        $botList[] = ['CCBot', 'CCBot'];
+        $botList[] = ['FacebookBot', 'FacebookBot'];
+        $botList[] = ['Google-Extended', 'Google-Extended'];
+        $botList[] = ['Site24x7', 'Site24x7'];
+        $botList[] = ['Stripe', 'Stripe'];
+        $botList[] = ['Slackbot', 'Slackbot'];
+        $botList[] = ['Proximic', 'Proximic'];
+        $botList[] = ['okhttp', 'okhttp'];
+        $botList[] = ['Python', 'Python'];
+        $botList[] = ['SemrushBot', 'SemrushBot'];
+        $botList[] = ['Chrome-Lighthouse', 'Chrome-Lighthouse'];
+        $botList[] = ['Axios', 'Axios'];
+        $botList[] = ['PetalBot', 'PetalBot'];
+        $botList[] = ['CriteoBot', 'CriteoBot'];
+        $botList[] = ['Baidu', 'Baidu'];
+        $botList[] = ['ContentKing', 'ContentKing'];
+        $botList[] = ['IAS crawler', 'IAS crawler'];
+        $botList[] = ['Sucuri', 'Sucuri'];
+        $botList[] = ['Seekport', 'Seekport'];
+        $botList[] = ['Sogou', 'Sogou'];
+        $botList[] = ['YahooMailProxy', 'YahooMailProxy'];
 
         return $botList;
     }
@@ -351,24 +478,6 @@ class API extends \Piwik\Plugin\API
         return $i;
     }
 
-    public function deleteBot($botId)
-    {
-        Piwik::checkUserHasSuperUserAccess();
-        try {
-            $db = self::getDb();
-            $query = $db->query(
-                "DELETE FROM `" .
-                Common::prefixTable('bot_db') .
-                "` WHERE `botId` = ?",
-                [$botId]
-            );
-            return true;
-        } catch (\Exception $e) {
-            throw $e;
-            return false;
-        }
-    }
-
     public static function getBotByName($idSite, $botName)
     {
         Piwik::checkUserHasSomeViewAccess();
@@ -382,92 +491,8 @@ class API extends \Piwik\Plugin\API
         return $rows;
     }
 
-    private static function convertBotLastVisitToLocalTime($rows, $idSite)
-    {
-        // convert lastVisit to localtime
-        $timezone = Site::getTimezoneFor($idSite);
-
-        try {
-            foreach ($rows as &$row) {
-                if ($row['botLastVisit'] == '0000-00-00 00:00:00') {
-                    $row['botLastVisit'] = " - ";
-                } elseif ($row['botLastVisit'] == '2000-01-01 00:00:00') {
-                    $row['botLastVisit'] = " - ";
-                } else {
-                    $botLastVisit = Date::adjustForTimezone(strtotime($row['botLastVisit']), $timezone);
-                        $row['botLastVisit'] = date('Y-m-d H:i:s', $botLastVisit);
-                }
-            }
-        } catch (\Exception $e) {
-            throw $e;
-            return false;
-        }
-        return $rows;
-    }
-    private static function htmlentities2utf8($string)
-    {
-        $output = preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
-            return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
-        }, $string);
-            return html_entity_decode($output);
-    }
-
     /**
-     * Get Data for the Report "Top10"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     * @return DataTable
-     */
-    public function getTop10($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getAllBotDataPie($idSite);
-    }
-    /**
-     * Get Data for the Report "BotTracker"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     * @return DataTable
-     */
-    public function getBotTracker($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getAllBotData($idSite);
-    }
-
-    /**
-     * Get Data for the Report "BotTrackerReport"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     */
-    public function getBotTrackerReport($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getBotTrackerReportDataTable($idSite, $period, $date, $segment = false);
-    }
-
-
-    /**
-     * Get Data for the Report "BotStatsReport"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     */
-    public function getOtherBots($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getOtherBotsDataTable($idSite, $period, $date, $segment = false);
-    }
-
-    /**
-     * @return DataTable
+     * @return \Piwik\DataTable
      */
     public static function getOtherBotsDataTable($idSite, $period, $date, $segment)
     {
@@ -484,32 +509,16 @@ class API extends \Piwik\Plugin\API
         list($startDate, $endDate) = self::getDateRangeForPeriod($date, $period, false);
         $startDate = $startDate->toString();
         $endDate = $endDate->toString();
-        $rows = self::getDb()->fetchAll(
+        return self::getDb()->fetchAll(
             "SELECT useragent, COUNT(*) as total FROM " .
             Common::prefixTable('bot_device_detector_bots') .
             " WHERE idSite= ? AND date(date) between ? AND ? GROUP BY `useragent` ORDER BY `useragent`",
-            [$idSite, $startDate, $endDate ]
+            [$idSite, $startDate, $endDate]
         );
-        // // @todo: convert visit_timestamp to site
-        return $rows;
-    }
-
-
-    /**
-     * Get Data for the Report "BotStatsReport"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     */
-    public function getStatsReport($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getStatsReportDataTable($idSite, $period, $date, $segment = false);
     }
 
     /**
-     * @return DataTable
+     * @return \Piwik\DataTable
      */
     public static function getStatsReportDataTable($idSite, $period, $date, $segment)
     {
@@ -530,7 +539,7 @@ class API extends \Piwik\Plugin\API
             "SELECT * FROM " .
             Common::prefixTable('bot_db_stat') .
             " WHERE idSite= ? AND date(visit_timestamp) between ? AND ? ORDER BY `botId`",
-            [$idSite, $startDate, $endDate ]
+            [$idSite, $startDate, $endDate]
         );
         foreach ($rows as &$row) {
             $name = self::getDb()->fetchRow(
@@ -543,55 +552,6 @@ class API extends \Piwik\Plugin\API
         }
         // @todo: convert visit_timestamp to site
         return $rows;
-    }
-
-    /**
-     * Get Data for the Report "BotTrackerReport"
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     * @return DataTable
-     */
-    public function getBotTrackerTopTenReport($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getBotTrackerTopTenReportPieDataTable($idSite, $period, $date, $segment = false);
-    }
-
-    /**
-     * Get Data for Dashboard-Widget
-     * @param int $idSite
-     * @param string $period
-     * @param string $date
-     * @param bool|string $segment
-     * @return DataTable
-     */
-    public function getBotTrackerAnzeige($idSite, $period, $date, $segment = false)
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        return $this->getActiveBotData($idSite);
-    }
-
-    public function getBotTypes()
-    {
-        Piwik::checkUserHasSomeViewAccess();
-        $db = self::getDb();
-        $rows = $db->fetchAll("SELECT `name`, `id` FROM " . Common::prefixTable('bot_type') . " ORDER BY `name`");
-        return $rows;
-    }
-    public function addBotType($type)
-    {
-        Piwik::checkUserHasSuperUserAccess();
-        try {
-            $db = self::getDb();
-            $sql = sprintf(
-                'INSERT INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
-            );
-            $db->query($sql, [$type]);
-        } catch (\Exception $e) {
-            throw $e;
-        }
     }
 
     public static function getDateRangeForPeriod($date, $period, $lastN = false)
@@ -612,7 +572,8 @@ class API extends \Piwik\Plugin\API
             $oPeriod = Period\Factory::build($period, Date::factory($date));
             $startDate = $oPeriod->getDateStart();
             $endDate = $oPeriod->getDateEnd();
-        } else { // if the range includes the last N periods or is a multiple period
+        } else {
+            // if the range includes the last N periods or is a multiple period
             if (!$isMultiplePeriod) {
                 list($date, $lastN) = Evolution::getDateRangeAndLastN($period, $date, $lastN);
             }
@@ -623,4 +584,49 @@ class API extends \Piwik\Plugin\API
         }
         return [$startDate, $endDate];
     }
+
+    private static function getDb()
+    {
+        return Db::get();
+    }
+
+    /**
+     * @return \Piwik\DataTable
+     */
+    private static function getDataTable($rows)
+    {
+        return DataTable::makeFromIndexedArray($rows);
+    }
+
+    private static function convertBotLastVisitToLocalTime($rows, $idSite)
+    {
+        // convert lastVisit to localtime
+        $timezone = Site::getTimezoneFor($idSite);
+
+        try {
+            foreach ($rows as &$row) {
+                if ($row['botLastVisit'] == '0000-00-00 00:00:00') {
+                    $row['botLastVisit'] = " - ";
+                } elseif ($row['botLastVisit'] == '2000-01-01 00:00:00') {
+                    $row['botLastVisit'] = " - ";
+                } else {
+                    $botLastVisit = Date::adjustForTimezone(strtotime($row['botLastVisit']), $timezone);
+                        $row['botLastVisit'] = date('Y-m-d H:i:s', $botLastVisit);
+                }
+            }
+        } catch (Exception $e) {
+            throw $e;
+            return false;
+        }
+        return $rows;
+    }
+
+    private static function htmlentities2utf8($string)
+    {
+        $output = preg_replace_callback("/(&#[0-9]+;)/", function ($m) {
+            return mb_convert_encoding($m[1], "UTF-8", "HTML-ENTITIES");
+        }, $string);
+            return html_entity_decode($output);
+    }
+
 }
