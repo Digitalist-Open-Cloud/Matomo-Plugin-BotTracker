@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 From version 5.x.x, major version reflects which Matomo version is supported.
 
+## [5.2.10] - 2024-04-08
+
+### Fixed
+
+* Problem with translations and admin menu.
+
 ## [5.2.9] - 2024-04-08
 
 ### Added
