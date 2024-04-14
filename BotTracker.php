@@ -274,8 +274,10 @@ class BotTracker extends \Piwik\Plugin
                 $settings = new SystemSettings();
                 $botsLogging = $settings->trackDeviceDetectorBots->getValue();
                 // If set in config, this overrides setting in UI.
-                if (Config::getInstance()->BotTracker['track_device_detector_bots'] == 1) {
-                    $botsLogging = 1;
+                if ($this->__isset('track_device_detector_bots')) {
+                    if (Config::getInstance()->BotTracker['track_device_detector_bots'] == 1) {
+                        $botsLogging = 1;
+                    }
                 }
                 if ($botsLogging) {
                         $currentTimestamp = gmdate("Y-m-d H:i:s");
@@ -287,5 +289,23 @@ class BotTracker extends \Piwik\Plugin
                 $exclude = true;
             }
         }
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function __isset(string $key): bool
+    {
+        return $this->has($key);
+    }
+
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function has(string $key): bool
+    {
+        return isset(Config::getInstance()->BotTracker[$key]);
     }
 }
