@@ -329,6 +329,7 @@ class API extends \Piwik\Plugin\API
         $botList[] = ['Seekport','Seekport'];
         $botList[] = ['Sogou','Sogou'];
         $botList[] = ['YahooMailProxy','YahooMailProxy'];
+        $botList[] = ['ClaudeBot','ClaudeBot'];
 
         return $botList;
     }
