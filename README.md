@@ -39,6 +39,18 @@ See <https://matomo.org/faq/plugins/faq_21/>
 * <https://badbot.org/>
 * <https://udger.com/resources/ua-list/crawlers>
 
+## Import logs with Log Analytics
+
+Matomo normally ships with a python scripts for importing server logs when you can't track visitors with injecting javascript on a website, `import_logs.py`. With the patch shipped with this plugin in the folder `patches` you can use Bot Tracker as normal also with imported logs. Just copy the patch to `misc/log-analytics` and run `patch -p1 < import_logs.patch` and bots are handled with the Bot Tracker plugin.
+
+Then you can run copy the logs to your Matomo instance and run something like:
+
+```bash
+python misc/log-analytics/import_logs.py --url=https://my-matomo-instance.org --idsite=1 --recorders=8 --enable-http-errors --enable-http-redirects --enable-static --enable-bots localhost.access_log
+```
+
+For documentation for Log Analytics, see the [documentation page](https://matomo.org/guide/tracking-data/import-server-logs/).
+
 ## License
 
 GPL v3 / fair use
