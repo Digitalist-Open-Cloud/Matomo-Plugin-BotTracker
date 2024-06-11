@@ -1,0 +1,58 @@
+diff --git a/import_logs.py b/import_logs.py
+index 80ea4ae..8285580 100755
+--- a/import_logs.py
++++ b/import_logs.py
+@@ -82,35 +82,7 @@ DOWNLOAD_EXTENSIONS = set((
+ # https://github.com/matomo-org/device-detector/blob/master/regexes/bots.yml
+ # user agents must be lowercase
+ EXCLUDED_USER_AGENTS = (
+-    'adsbot-google',
+-    'ask jeeves',
+-    'baidubot',
+-    'bot-',
+-    'bot/',
+-    'ccooter/',
+-    'crawl',
+-    'curl',
+-    'echoping',
+-    'exabot',
+-    'feed',
+-    'googlebot',
+-    'ia_archiver',
+-    'java/',
+-    'libwww',
+-    'mediapartners-google',
+-    'msnbot',
+-    'netcraftsurvey',
+-    'panopta',
+-    'pingdom.com_bot_',
+-    'robot',
+-    'spider',
+-    'surveybot',
+-    'twiceler',
+-    'voilabot',
+-    'yahoo',
+-    'yandex',
+-    'zabbix',
+-    'googlestackdrivermonitoring',
++    'dummybotthatdoesnotexistsowecankeepthearray',
+ )
+
+ MATOMO_DEFAULT_MAX_ATTEMPTS = 3
+@@ -1923,11 +1895,11 @@ class Recorder:
+         url = (url_prefix if path.startswith('/') else '') + path[:1024]
+
+         # handle custom variables before generating args dict
+-        if config.options.enable_bots:
+-            if hit.is_robot:
+-                hit.add_visit_custom_var("Bot", hit.user_agent)
+-            else:
+-                hit.add_visit_custom_var("Not-Bot", hit.user_agent)
++        # if config.options.enable_bots:
++        #     if hit.is_robot:
++        #         hit.add_visit_custom_var("Bot", hit.user_agent)
++        #     else:
++        #         hit.add_visit_custom_var("Not-Bot", hit.user_agent)
+
+         hit.add_page_custom_var("HTTP-code", hit.status)
+
