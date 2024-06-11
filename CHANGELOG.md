@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 From version 5.x.x, major version reflects which Matomo version is supported.
 
--## [5.2.14] - 2024-06-11
+## [5.2.14] - 2024-06-11
 
 ### Added
 
