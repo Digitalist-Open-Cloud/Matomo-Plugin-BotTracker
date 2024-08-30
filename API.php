@@ -330,7 +330,7 @@ class API extends \Piwik\Plugin\API
         $botList[] = ['Sogou','Sogou'];
         $botList[] = ['YahooMailProxy','YahooMailProxy'];
         $botList[] = ['ClaudeBot','ClaudeBot'];
-
+        $botList[] = ['Screaming Frog SEO Spider','Screaming Frog SEO Spider'];
         return $botList;
     }
 
