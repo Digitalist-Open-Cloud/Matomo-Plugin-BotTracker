@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 From version 5.x.x, major version reflects which Matomo version is supported.
 
+## [5.2.17] - 2024-09-18
+
+### Changed
+
+- Version bump to check access for publishing plugin.
+
+
 ## [5.2.16] - 2024-08-30
 
 ### Added
