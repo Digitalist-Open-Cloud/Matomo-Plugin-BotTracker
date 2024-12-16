@@ -45,6 +45,7 @@ class GetBotTrackerTopTenReport extends Base
         $view->config->selectable_columns = ["value"];
         $view->config->show_related_reports  = false;
         $view->config->show_table_all_columns = false;
+        $view->config->max_graph_elements = 10;
     }
 
     /**
