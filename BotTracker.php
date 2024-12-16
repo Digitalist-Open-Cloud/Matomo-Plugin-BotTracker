@@ -249,10 +249,10 @@ class BotTracker extends \Piwik\Plugin
             $db->query($query, $params);
 
             // @deprecated since v5.2.0
-            $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
-			               SET botCount = botCount + 1
-			                 , botLastVisit = ?
-			             WHERE botId = ?", [$currentTimestamp, $botId]);
+            // $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
+            //                SET botCount = botCount + 1
+            //                  , botLastVisit = ?
+            //              WHERE botId = ?", [$currentTimestamp, $botId]);
 
             $exclude = true;
 

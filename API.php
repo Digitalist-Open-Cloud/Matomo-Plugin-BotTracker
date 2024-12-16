@@ -227,28 +227,47 @@ class API extends \Piwik\Plugin\API
         //return DataTable::makeFromIndexedArray($pieArray);
     }
 
-    public static function updateBot($botName, $botKeyword, $botActive, $botId, $extraStats)
+    public static function updateBot($idSite, $botName, $botKeyword, $botActive, $botId, $extraStats)
     {
         Piwik::checkUserHasSuperUserAccess();
-        self::getDb()->query(
-            "UPDATE `" . Common::prefixTable('bot_db') . "`
-		             SET `botName` = ?
-		               , `botKeyword` = ?
-		               , `botActive` = ?
-		               , `extra_stats` = ?
-		             WHERE `botId` = ?",
-            [self::htmlentities2utf8($botName),
-                     self::htmlentities2utf8($botKeyword),
-                     $botActive,
-                     $extraStats,
-                     $botId]
-        );
+        $params = [
+            'botName' => $botName,
+            'botActive' => $botActive,
+            'botKeyword' => $botKeyword,
+            'extraStats' => $extraStats,
+        ];
+        try {
+            self::getDb()->query(
+                "UPDATE `" . Common::prefixTable('bot_db') . "`
+                         SET `botName` = ?
+                           , `botKeyword` = ?
+                           , `botActive` = ?
+                           , `extra_stats` = ?
+                         WHERE `botId` = ?",
+                [self::htmlentities2utf8($botName),
+                         self::htmlentities2utf8($botKeyword),
+                         $botActive,
+                         $extraStats,
+                         $botId]
+            );
+            Piwik::postEvent('BotTracker.updateBot.successful', array($idSite, $params));
+        } catch (\Exception $e) {
+            Piwik::postEvent('BotTracker.updateBot.failed', array($idSite, $params));
+            throw $e;
+            return false;
+        }
     }
 
     public static function insertBot($idSite, $botName, $botActive, $botKeyword, $extraStats, $botType = 0)
     {
         Piwik::checkUserHasSuperUserAccess();
-
+        $params = [
+            'botName' => $botName,
+            'botActive' => $botActive,
+            'botKeyword' => $botKeyword,
+            'extraStats' => $extraStats,
+            'botType' => $botType,
+        ];
         try {
             self::getDb()->query(
                 "INSERT INTO `" . Common::prefixTable('bot_db') . "`
@@ -262,8 +281,10 @@ class API extends \Piwik\Plugin\API
                 $extraStats,
                 $botType]
             );
+            Piwik::postEvent('BotTracker.insertBot.successful', array($idSite, $params));
             return true;
         } catch (\Exception $e) {
+            Piwik::postEvent('BotTracker.insertBot.failed', array($idSite, $params));
             throw $e;
             return false;
         }
@@ -352,7 +373,7 @@ class API extends \Piwik\Plugin\API
         return $i;
     }
 
-    public function deleteBot($botId)
+    public function deleteBot($idSite, $botId)
     {
         Piwik::checkUserHasSuperUserAccess();
         try {
@@ -363,8 +384,10 @@ class API extends \Piwik\Plugin\API
                 "` WHERE `botId` = ?",
                 [$botId]
             );
+            Piwik::postEvent('BotTracker.deleteBot.successful', array($idSite, $botId));
             return true;
         } catch (\Exception $e) {
+            Piwik::postEvent('BotTracker.deleteBot.failed', array($idSite, $botId));
             throw $e;
             return false;
         }

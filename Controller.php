@@ -137,7 +137,7 @@ class Controller extends ControllerAdmin
                         $bot['botId'] .
                         Piwik::translate('BotTracker_Error_empty');
                     } else {
-                        APIBotTracker::updateBot($botName, $botKeyword, $botActive, $bot['botId'], $extraStats);
+                        APIBotTracker::updateBot($siteID, $botName, $botKeyword, $botActive, $bot['botId'], $extraStats);
                     }
                 }
             }
@@ -197,7 +197,7 @@ class Controller extends ControllerAdmin
             $errorList = [];
 
             $APIBotTracker = new APIBotTracker();
-            $APIBotTracker->deleteBot($botId);
+            $APIBotTracker->deleteBot($siteID, $botId);
 
             $errorList[] = 'Bot ' . $botId . ' ' . Piwik::translate('BotTracker_Message_deleted');
             $this->index($siteID, $errorList);
