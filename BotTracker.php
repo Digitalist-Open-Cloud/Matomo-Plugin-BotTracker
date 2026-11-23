@@ -13,6 +13,7 @@ use Piwik\Common;
 use Piwik\Config;
 use Piwik\Container\StaticContainer;
 use Piwik\Db;
+use Piwik\DbHelper;
 use Piwik\Plugins\SitesManager\API as APISitesManager;
 use Piwik\Tracker;
 use Piwik\Plugins\BotTracker\API as BotTrackerAPI;
@@ -20,151 +21,117 @@ use Piwik\DeviceDetector\DeviceDetectorFactory;
 
 class BotTracker extends \Piwik\Plugin
 {
-    private function getDb()
-    {
-        return Db::get();
-    }
+    public const TABLES = ['bot_db', 'bot_db_stat', 'bot_type', 'bot_visits', 'bot_device_detector_bots'];
+
+    private const BOT_TYPES = [
+        'Monitoring & Analytics',
+        'Search Engine Optimization',
+        'Advertising & Marketing',
+        'Page Preview',
+        'Webhook',
+        'Social network',
+        'Scraper',
+        'Copyright',
+        'Search Engine Crawler',
+        'AI Search Crawler',
+        'AI Data Scraper',
+        'AI Assistant',
+        'Other',
+    ];
 
     public function install()
     {
-        $tableExists = false;
-        $db = $this->getDb();
+        $isFirstInstall = !Db::fetchOne('SHOW TABLES LIKE ?', [Common::prefixTable('bot_db')]);
 
-        // create new table "bot_db"
-        $query = "CREATE TABLE `" . Common::prefixTable('bot_db') . "`
-						 (`botId` INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-						  `idsite` INTEGER(10) UNSIGNED NOT NULL,
-						  `botName` VARCHAR(256) NOT NULL,
-						  `botActive` BOOLEAN NOT NULL,
-						  `botKeyword` VARCHAR(256) NOT NULL,
-						  `botCount` INTEGER(10) UNSIGNED NOT NULL,
-						  `botLastVisit` TIMESTAMP NOT NULL,
-						  `extra_stats` BOOLEAN NOT NULL DEFAULT FALSE,
-                          `botType` TINYINT(0) UNSIGNED NULL DEFAULT 0,
-						  PRIMARY KEY(`botId`)
-						)  DEFAULT CHARSET=utf8";
+        // DbHelper creates the tables with the character set and engine Matomo is configured for.
+        DbHelper::createTable('bot_db', "
+            `botId` INTEGER(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `idsite` INTEGER(10) UNSIGNED NOT NULL,
+            `botName` VARCHAR(256) NOT NULL,
+            `botActive` BOOLEAN NOT NULL,
+            `botKeyword` VARCHAR(256) NOT NULL,
+            `botCount` INTEGER(10) UNSIGNED NOT NULL,
+            `botLastVisit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `extra_stats` BOOLEAN NOT NULL DEFAULT FALSE,
+            `botType` TINYINT UNSIGNED NULL DEFAULT 0,
+            PRIMARY KEY(`botId`)");
 
-        // if the table already exist do not throw error. Could be installed twice...
-        try {
-            $db->exec($query);
-        } catch (\Exception $e) {
-            $tableExists = true;
-        }
+        DbHelper::createTable('bot_db_stat', "
+            `visitId` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `botId` INTEGER(10) UNSIGNED NOT NULL,
+            `idsite` INTEGER(10) UNSIGNED NOT NULL,
+            `page` VARCHAR(256) NOT NULL,
+            `visit_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `useragent` VARCHAR(256) NOT NULL,
+            PRIMARY KEY(`visitId`,`botId`,`idsite`)");
 
-        if (!$tableExists) {
-            $sites = APISitesManager::getInstance()->getSitesWithAdminAccess();
-            foreach ($sites as $site) {
-                BotTrackerAPI::insertDefaultBots($site['idsite']);
-            }
-        }
-        // Create bot_db_stat table.
-        $query2 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_db_stat') . '`
-						(
-						`visitId` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			 			`botId` INTEGER(10) UNSIGNED NOT NULL,
-			 			`idsite` INTEGER(10) UNSIGNED NOT NULL,
-			 			`page` VARCHAR(256) NOT NULL,
-			 			`visit_timestamp` TIMESTAMP NOT NULL,
-			 			`useragent` VARCHAR(256) NOT NULL,
-
-			 			PRIMARY KEY(`visitId`,`botId`,`idsite`)
-						)  DEFAULT CHARSET=utf8';
-        try {
-            $db->exec($query2);
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        // Create bot_type table
-        $query3 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_type') . '`
-        (
+        DbHelper::createTable('bot_type', "
             `id` INT(11) NOT NULL AUTO_INCREMENT,
-             `name` VARCHAR(256) NOT NULL,
-             `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-             PRIMARY KEY(`id`), UNIQUE(`name`)
-            ) DEFAULT CHARSET=utf8';
-        try {
-            $db->exec($query3);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+            `name` VARCHAR(256) NOT NULL,
+            `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY(`id`), UNIQUE(`name`)");
 
-        $botTypes = [
-            'Monitoring & Analytics',
-            'Search Engine Optimization',
-            'Advertising & Marketing',
-            'Page Preview',
-            'Webhook',
-            'Social network',
-            'Scraper',
-            'Copyright',
-            'Search Engine Crawler',
-            'AI Search Crawler',
-            'AI Data Scraper',
-            'AI Assistant',
-            'Other',
-        ];
-        try {
-            foreach ($botTypes as $type) {
-                $sql = sprintf(
-                    'INSERT IGNORE INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)'
-                );
-                $db->query($sql, [$type]);
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-
-        $query4 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_visits') . '`
-        (
+        DbHelper::createTable('bot_visits', "
             `id` BIGINT UNSIGNED AUTO_INCREMENT,
             `botId` INT UNSIGNED,
             `idsite` INT UNSIGNED,
             `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-             PRIMARY KEY(`id`)
-            ) DEFAULT CHARSET=utf8';
-        try {
-            $db->exec($query4);
-        } catch (\Exception $e) {
-            throw $e;
-        }
+            PRIMARY KEY(`id`)");
 
-        $query5 =  'CREATE TABLE IF NOT EXISTS `' . Common::prefixTable('bot_device_detector_bots') . '`
-        (
+        DbHelper::createTable('bot_device_detector_bots', "
             `id` INT(11) NOT NULL AUTO_INCREMENT,
             `idsite` INT UNSIGNED,
             `useragent` VARCHAR(256) NOT NULL,
             `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-             PRIMARY KEY(`id`)
-            ) DEFAULT CHARSET=utf8';
-        try {
-            $db->exec($query5);
-        } catch (\Exception $e) {
-            throw $e;
+            PRIMARY KEY(`id`)");
+
+        foreach (self::BOT_TYPES as $type) {
+            Db::query('INSERT IGNORE INTO ' . Common::prefixTable('bot_type') . ' (`name`) VALUES (?)', [$type]);
+        }
+
+        if ($isFirstInstall) {
+            foreach (APISitesManager::getInstance()->getSitesWithAdminAccess() as $site) {
+                BotTrackerAPI::insertDefaultBots($site['idsite']);
+            }
         }
     }
 
     public function uninstall()
     {
-        $db = $this->getDb();
-        $query = "DROP TABLE `" . Common::prefixTable('bot_db') . "` ";
-        $db->query($query);
-        $query2 = "DROP TABLE `" . Common::prefixTable('bot_db_stat') . "` ";
-        $db->query($query2);
-        $query3 = "DROP TABLE `" . Common::prefixTable('bot_type') . "` ";
-        $db->query($query3);
-        $query4 = "DROP TABLE `" . Common::prefixTable('bot_visits') . "` ";
-        $db->query($query4);
-        $query5 = "DROP TABLE `" . Common::prefixTable('bot_device_detector_bots') . "` ";
-        $db->query($query5);
+        Db::dropTables(array_map([Common::class, 'prefixTable'], self::TABLES));
+    }
+
+    public function getTablesInstalled(&$allTablesInstalled)
+    {
+        foreach (self::TABLES as $table) {
+            $allTablesInstalled[] = Common::prefixTable($table);
+        }
+    }
+
+    /**
+     * Removes the bots of a website that is deleted, and what was counted for them.
+     */
+    public function deleteSiteData($idSite)
+    {
+        foreach (['bot_db', 'bot_db_stat', 'bot_visits', 'bot_device_detector_bots'] as $table) {
+            Db::query('DELETE FROM ' . Common::prefixTable($table) . ' WHERE idsite = ?', [$idSite]);
+        }
     }
 
     public function registerEvents()
     {
         return [
             'Tracker.isExcludedVisit'  => 'checkBot',
+            'Db.getTablesInstalled' => 'getTablesInstalled',
+            'SitesManager.deleteSite.end' => 'deleteSiteData',
+            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
         ];
+    }
+
+    public function getStylesheetFiles(&$stylesheets)
+    {
+        $stylesheets[] = 'plugins/BotTracker/stylesheets/menuIcon.less';
     }
 
     /**
@@ -229,8 +196,7 @@ class BotTracker extends \Piwik\Plugin
         $userAgent = $request->getUserAgent();
         $idSite = $request->getIdSite();
         $currentTimestamp = gmdate("Y-m-d H:i:s");
-        // max length of url can be 256 Bytes
-        $currentUrl = substr($request->getParam('url'), 0, 256);
+        $currentUrl = mb_substr((string) $request->getParam('url'), 0, 256, 'UTF-8');
 
         $db = Tracker::getDatabase();
         $result = $db->fetchRow("SELECT `botId`, `extra_stats` FROM " . Common::prefixTable('bot_db') . "
@@ -242,29 +208,20 @@ class BotTracker extends \Piwik\Plugin
         $botId = $result['botId'] ?? 0;
 
         if ($botId > 0) {
-            // New since 5.1.0
             $query = "INSERT INTO `" . Common::prefixTable('bot_visits') . "`
             (botid, idsite, date) VALUES (?,?,?)";
             $params = [$botId, $idSite, $currentTimestamp];
             $db->query($query, $params);
-
-            // @deprecated since v5.2.0
-            // $db->query("UPDATE `" . Common::prefixTable('bot_db') . "`
-            //                SET botCount = botCount + 1
-            //                  , botLastVisit = ?
-            //              WHERE botId = ?", [$currentTimestamp, $botId]);
 
             $exclude = true;
 
             if ($result['extra_stats'] > 0) {
                 $query = "INSERT INTO `" . Common::prefixTable('bot_db_stat') . "`
 					(idsite, botid, page, visit_timestamp, useragent) VALUES (?,?,?,?,?)";
-                // max length of useragent can be 256 Bytes
-                $params = [$idSite,$botId,$currentUrl,$currentTimestamp,substr($userAgent, 0, 256)];
+                $params = [$idSite, $botId, $currentUrl, $currentTimestamp, mb_substr($userAgent, 0, 256, 'UTF-8')];
                 $db->query($query, $params);
             }
         } else {
-            $userAgent = $request->getUserAgent();
             $deviceDetector = StaticContainer::get(DeviceDetectorFactory::class)->makeInstance(
                 $userAgent,
                 $request->getClientHints()
@@ -283,7 +240,7 @@ class BotTracker extends \Piwik\Plugin
                         $currentTimestamp = gmdate("Y-m-d H:i:s");
                         $query = "INSERT INTO `" . Common::prefixTable('bot_device_detector_bots') . "`
                         (idsite, useragent, date) VALUES (?,?,?)";
-                        $params = [$idSite, substr($userAgent, 0, 256), $currentTimestamp];
+                        $params = [$idSite, mb_substr($userAgent, 0, 256, 'UTF-8'), $currentTimestamp];
                         $db->query($query, $params);
                 }
                 $exclude = true;

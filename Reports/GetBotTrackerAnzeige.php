@@ -28,7 +28,7 @@ class GetBotTrackerAnzeige extends Base
         parent::init();
 
         $this->name = Piwik::translate('BotTracker_DisplayWidget_Deprecated_Report');
-        $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
+        $this->subcategoryId = 'BotTracker_BotTracker';
         $this->order = 99;
     }
 

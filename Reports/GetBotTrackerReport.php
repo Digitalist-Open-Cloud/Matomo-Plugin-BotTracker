@@ -25,7 +25,7 @@ class GetBotTrackerReport extends Base
         parent::init();
 
         $this->name = Piwik::translate('BotTracker_Bot_Tracker_Report');
-        $this->subcategoryId = Piwik::translate('BotTracker_BotTracker');
+        $this->subcategoryId = 'BotTracker_BotTracker';
         $this->documentation = Piwik::translate('BotTracker_ReportDocumentation');
         $this->order = 98;
     }

@@ -5,6 +5,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 From version 5.x.x, major version reflects which Matomo version is supported.
 
+## Unreleased
+
+### Security
+
+- Reports and bot lists are only given to users with view access to the website they are for.
+- Every change on the settings page is posted with a nonce; a link can no longer add, change or delete bots.
+- A bot is changed and deleted only through the website it belongs to.
+- Error details of the database are no longer shown on the settings page.
+
+### Changed
+
+- A bot needs a name and a keyword of at most 256 characters.
+- The reports read their numbers in one query per report.
+- `bottracker:delete-bot` reports when the bot does not exist.
+- The settings page is only in the menu for super users.
+
+### Fixed
+
+- Names with special characters are stored on PHP 8.2 and later without a deprecation notice.
+- Long addresses and user agents with characters of several bytes are cut by characters.
+- Reports for a range of days.
+- The bots of a website are removed when the website is deleted.
+- The tables are created with the character set Matomo is configured for.
+
+### Added
+
+- Swedish translation of all texts.
+- Tests, PHPStan and Semgrep checks.
+
 ## [5.2.17] - 2024-09-18
 
 ### Changed

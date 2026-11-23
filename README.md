@@ -1,5 +1,10 @@
 # Matomo Bot Tracker Plugin
 
+[![PHPCS check](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/phpcs.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/phpcs.yaml)
+[![Semgrep OSS scan](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/semgrep.yaml)
+[![Test plugin with Matomo](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/matomo.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/matomo.yaml)
+[![PHPStan check](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/phpstan.yaml/badge.svg)](https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/actions/workflows/phpstan.yaml)
+
 Are you tracking data full of bots? That traffic is normally not useful for you, it is just clutter. Bot Tracker removes those visits from your normal data, and also provide separate reports so you could see which bots are visiting your site. With Matomo and Bot Tracker you have insight in Bot Traffic on your site.
 
 ## Description

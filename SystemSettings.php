@@ -9,6 +9,7 @@
 
 namespace Piwik\Plugins\BotTracker;
 
+use Piwik\Piwik;
 use Piwik\Settings\Setting;
 use Piwik\Settings\FieldConfig;
 
@@ -36,10 +37,9 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
             $default = false,
             FieldConfig::TYPE_BOOL,
             function (FieldConfig $field) {
-                $field->title = 'Enable logging of Matomo Device Detector Bots';
+                $field->title = Piwik::translate('BotTracker_Setting_TrackDeviceDetectorBots');
                 $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
-                $field->description = 'If enabled, detected by Matomo Device Detector,'
-                  . 'and not configured by Bot Tracker, will be logged';
+                $field->description = Piwik::translate('BotTracker_Setting_TrackDeviceDetectorBotsDescription');
             }
         );
     }

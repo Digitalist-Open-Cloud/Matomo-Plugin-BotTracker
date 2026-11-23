@@ -1,36 +1,39 @@
 name: PHPCS check
 
-permissions:
-  actions: read
-  checks: read
-  contents: read
-  deployments: none
-  issues: read
-  packages: none
-  pull-requests: read
-  repository-projects: none
-  security-events: none
-  statuses: none
-
 on:
-  pull_request:
-    types: [opened, synchronize, edited, ready_for_review]
+  pull_request: {}
+  workflow_dispatch: {}
   push:
-    branches: [ main ]
+    branches: ["5.x-dev"]
 
 jobs:
   phpcs:
     name: PHPCS
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: composer install --dev --prefer-dist --no-progress --no-suggest --ignore-platform-reqs
+      - uses: actions/checkout@v7
+        with:
+          lfs: false
+          persist-credentials: false
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           tools: cs2pr
-      - name: Run phpcs
-        run: ./vendor/bin/phpcs .  --standard=PSR12 -q --report=checkstyle --ignore=*/vendor/*,Updates/*,tests/* | cs2pr
+      # The coding standard is installed on its own: the plugin's composer.json asks for an older
+      # code sniffer than the standard needs.
+      - name: Install dependencies
+        run:
+          rm -f composer.json composer.lock;
+          composer init --name=matomo/bottracker --quiet;
+          composer --no-plugins config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true -n;
+          composer config repositories.matomo-coding-standards vcs https://github.com/matomo-org/matomo-coding-standards -n;
+          composer require matomo-org/matomo-coding-standards:dev-master;
+          composer install --dev --prefer-dist --no-progress --no-suggest
+      - name: Check PHP code styles
+        id: phpcs
+        run: ./vendor/bin/phpcs --report-full --standard=tests/phpcs.xml --report-checkstyle=./phpcs-report.xml
+      - name: Show PHPCS results in PR
+        if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+        run: cs2pr ./phpcs-report.xml --prepend-filename
 
