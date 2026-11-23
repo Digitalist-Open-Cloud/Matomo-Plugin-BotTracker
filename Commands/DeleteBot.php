@@ -11,6 +11,8 @@ namespace Piwik\Plugins\BotTracker\Commands;
 
 use Piwik\Plugin\ConsoleCommand;
 use Symfony\Component\Console\Input\InputOption;
+use Piwik\Common;
+use Piwik\Db;
 use Piwik\Plugins\BotTracker\API;
 
 /**
@@ -20,7 +22,7 @@ class DeleteBot extends ConsoleCommand
 {
     protected function configure()
     {
-        $HelpText = 'The <info>%command.name%</info> command will add a new bot.
+        $HelpText = 'The <info>%command.name%</info> command deletes a bot.
 <comment>Samples:</comment>
 To run:
 <info>%command.name% --botId=1</info>';
@@ -54,8 +56,14 @@ To run:
             return self::FAILURE;
         }
 
+        $idSite = Db::fetchOne('SELECT idsite FROM ' . Common::prefixTable('bot_db') . ' WHERE botId = ?', [$botId]);
+        if (!$idSite) {
+            $output->write("<error>There is no bot with id $botId.</error>\n");
+            return self::FAILURE;
+        }
+
         $botAPI = new API();
-        $botAPI->deleteBot($botId);
+        $botAPI->deleteBot($idSite, $botId);
         $output->write("<info>Bot with id $botId deleted.</info>\n");
         return self::SUCCESS;
     }

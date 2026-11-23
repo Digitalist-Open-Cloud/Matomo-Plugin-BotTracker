@@ -6,6 +6,7 @@
         "BotCount": "Visit Count",
         "BotKeyword": "Keyword (user agent)",
         "BotLastVisit": "Last visit",
+        "BotId": "Bot ID",
         "BotName": "Name",
         "BotTracker": "Bot Tracker",
         "Bot_Tracker": "Bot Tracker",
@@ -49,6 +50,11 @@
         "TopTenDocumentation": "This reports shows a chart of the top 10 bots on given date(s). Note that Bot Tracker does not use Segments.",
         "true": "Yes",
         "Visit_Timestamp": "Time stamp",
-        "Widgets": "Bot Tracker"
+        "Widgets": "Bot Tracker",
+        "Error_Bot": "A bot needs a name and a keyword of at most %s characters.",
+        "Error_Not_Posted": "This change has to be sent from its form.",
+        "Setting_TrackDeviceDetectorBots": "Enable logging of Matomo Device Detector bots",
+        "Setting_TrackDeviceDetectorBotsDescription": "If enabled, bots that are detected by the Matomo Device Detector and are not configured in Bot Tracker are logged.",
+        "MaintainedBy": "This plugin is maintained and developed by %1$sDigitalist Open Cloud%2$s and the Matomo community."
     }
 }

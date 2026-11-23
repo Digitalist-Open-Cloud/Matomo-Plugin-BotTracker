@@ -1,15 +1,10 @@
 # Security Policy
 
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.2.x   | :white_check_mark: |
-| v3.0.0   | :x:                |
-| v2.x   | :x:                |
-| v1.x   | :x:                |
-| v0.x   | :x:                |
-
 ## Reporting a Vulnerability
 
-To report a security vulnerability, please mail <mikke.schiren@digitalist.com> describing the security issue.
+Please do not report security vulnerabilities through public GitHub issues.
+
+Report them privately via GitHub's private vulnerability reporting:
+<https://github.com/Digitalist-Open-Cloud/Matomo-Plugin-BotTracker/security/advisories/new>
+
+Include a description of the issue, steps to reproduce, and the affected version(s).

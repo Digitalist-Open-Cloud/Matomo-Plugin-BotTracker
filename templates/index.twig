@@ -47,7 +47,7 @@
   <table class="card card-table entityTable">
     <thead>
         <tr>
-            <th>SiteID</th>
+            <th>{{'General_Website'|translate}}</th>
             <th>{{'BotTracker_BotActive'|translate}}</th>
             <th>{{'BotTracker_ExtraStats'|translate}}</th>
             <th>{{'BotTracker_BotName'|translate}}</th>
@@ -71,8 +71,8 @@
           </label>
         </td>
         <td><input type="text" size="30" value="{{bot.botName}}" name="{{bot.botId}}_botName"/></td>
-        <td><input type="text" size="32" maxlength="32" value="{{bot.botKeyword}}" name="{{bot.botId}}_botKeyword"/></td>
-        <td><a href='{{ linkTo({'module':'BotTracker','action':'deleteBotEntry', 'idSite':idSite, 'botId':bot.botId}) }}'><span class="icon-delete"></span></a></td>
+        <td><input type="text" size="32" maxlength="256" value="{{bot.botKeyword}}" name="{{bot.botId}}_botKeyword"/></td>
+        <td><button type="submit" class="btn-flat icon-delete" title="{{ 'BotTracker_Delete'|translate }}" name="botId" value="{{bot.botId}}" form="botTrackerDelete"></button></td>
     </tr>
 	{% endfor %}
   </table>
@@ -80,6 +80,10 @@
   <input type="hidden" value="{{idSite}}" name="siteID" />
 
   <input type="submit" value="{{'BotTracker_save_changes'|translate}}" name="submit" class="btn submit" />
+  </form>
+  {# The delete buttons belong to this form, so that Enter in a field of the table saves and does not delete. #}
+  <form id="botTrackerDelete" method="POST" action="{{ linkTo({'module':'BotTracker','action':'deleteBotEntry','idSite':idSite}) }}">
+    <input type="hidden" value="{{nonce}}" name="form_nonce" />
   </form>
 </div>
 </div>
@@ -92,6 +96,7 @@
       <form enctype="multipart/form-data"
       action="{{ linkTo({'module':'BotTracker','action':'configInsertDb'})}}"
       method="POST">
+        <input type="hidden" value="{{nonce}}" name="form_nonce" />
         <input type="hidden" value="{{ idSite }}" name="siteID" />
         <input
             type="submit"
@@ -129,7 +134,7 @@
                 </label>
             </td>
             <td><input type="text" size="30" name="new_botName"/></td>
-            <td><input type="text" size="32" maxlength="32" name="new_botKeyword"/></td>
+            <td><input type="text" size="32" maxlength="256" name="new_botKeyword"/></td>
           </tr>
         </table>
         <input type="hidden" value="{{nonce}}" name="form_nonce" />
@@ -140,6 +145,7 @@
     <h3>{{'BotTracker_File'|translate}}</h3>
     <div class="form-group row matomo-form-field">
     <form enctype="multipart/form-data" action="{{ linkTo({'module':'BotTracker','action':'configImport'})}}" method="POST">
+      <input type="hidden" value="{{nonce}}" name="form_nonce" />
       <input type="hidden" name="MAX_FILE_SIZE" value="50000" />
       <div class="col s12 input-field m6">
         {{'BotTracker_Importfile'|translate}} <input name="importfile" type="file" />

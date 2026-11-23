@@ -5,24 +5,13 @@ namespace Piwik\Plugins\BotTracker\Widgets;
 use Piwik\Piwik;
 use Piwik\Widget\Widget;
 use Piwik\Widget\WidgetConfig;
-use Piwik\Translation\Translator;
 
 class GetDigiInfo extends Widget
 {
-     /**
-      * @var Translator
-      */
-     private $translator;
-
-    public function __construct(Translator $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public static function configure(WidgetConfig $config)
     {
         $config->setCategoryId('General_Visitors');
-        $config->setSubcategoryId(Piwik::translate('BotTracker_BotTracker'));
+        $config->setSubcategoryId('BotTracker_BotTracker');
         $config->setIsWide();
         $config->setOrder(0);
         $config->setIsNotWidgetizable();
@@ -36,15 +25,12 @@ class GetDigiInfo extends Widget
         return '<div class="card">
           <div class="card-content">
           <div style="float:right">
-            <a style="text-decoration:none" href="https://digitalist.se/">
-              <img src="' . $imageDir  . 'dot.png" height="40" />
+            <a style="text-decoration:none" href="https://digitalist.se/" rel="noreferrer noopener">
+              <img src="' . $imageDir  . 'dot.png" height="40" alt="Digitalist Open Cloud" />
             </a>
           </div>
-          <h2 class="title">Bot Tracker</h2>
-            <p>This plugin is maintained and developed by
-              <a href="https://digitalist.se/">Digitalist Open Cloud</a>
-              and the Matomo community.
-            </p>
+          <h2 class="title">' . Piwik::translate('BotTracker_BotTracker') . '</h2>
+            <p>' . Piwik::translate('BotTracker_MaintainedBy', ['<a href="https://digitalist.se/" rel="noreferrer noopener">', '</a>']) . '</p>
           </div>
         </div>';
     }
