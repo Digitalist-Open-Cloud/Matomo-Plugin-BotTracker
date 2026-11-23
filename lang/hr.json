@@ -1,6 +1,9 @@
 {
     "BotTracker": {
         "BotKeyword": "Ključna riječ",
+        "BotName": "Ime",
+        "Config": "Konfiguracija",
+        "Documentation": "Dokumentacija",
         "false": "Ne",
         "save_changes": "Spremi",
         "true": "Da"

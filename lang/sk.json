@@ -1,5 +1,12 @@
 {
     "BotTracker": {
-        "BotLastVisit": "Posledná návšteva"
+        "BotActive": "Aktívny",
+        "BotLastVisit": "Posledná návšteva",
+        "BotName": "Meno",
+        "Config": "Konfigurácia",
+        "Documentation": "Dokumentácia",
+        "false": "Nie",
+        "save_changes": "Uložiť",
+        "true": "Áno"
     }
 }

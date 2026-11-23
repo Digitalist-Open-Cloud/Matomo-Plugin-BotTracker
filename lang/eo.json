@@ -1,5 +1,11 @@
 {
     "BotTracker": {
-        "BotKeyword": "Klavvorto"
+        "BotKeyword": "Klavvorto",
+        "BotName": "Nomo",
+        "Documentation": "Dokumentaro",
+        "New": "Nova",
+        "false": "Ne",
+        "save_changes": "Konservi",
+        "true": "Jes"
     }
 }

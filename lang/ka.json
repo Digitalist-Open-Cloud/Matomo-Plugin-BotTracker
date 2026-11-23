@@ -2,7 +2,10 @@
     "BotTracker": {
         "BotActive": "აქტიური",
         "BotKeyword": "საკვანძო სიტყვა",
+        "BotName": "სახელი",
+        "Config": "კონფიგურაცია",
         "false": "არა",
-        "save_changes": "შენახვა"
+        "save_changes": "შენახვა",
+        "true": "დიახ"
     }
 }

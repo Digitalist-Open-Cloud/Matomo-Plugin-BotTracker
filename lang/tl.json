@@ -1,1 +1,11 @@
-{}
+{
+    "BotTracker": {
+        "BotActive": "Aktibo",
+        "BotLastVisit": "Huling pagbisita",
+        "BotName": "Pangalan",
+        "Config": "Configuration",
+        "Documentation": "Dokumentasyon",
+        "false": "Hindi",
+        "save_changes": "I-save"
+    }
+}

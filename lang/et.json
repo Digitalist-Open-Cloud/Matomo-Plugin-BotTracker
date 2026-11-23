@@ -4,13 +4,17 @@
         "BotCount": "Külastuste arv",
         "BotKeyword": "Märksõna",
         "BotLastVisit": "Viimane külastus",
+        "BotName": "Nimi",
         "BotTracker": "BotTracker",
-        "delete": "kustuta",
+        "Config": "Konfiguratsioon",
+        "Delete": "kustuta",
+        "Documentation": "Dokumentatsioon",
         "Error_empty": "on tühi!",
-        "false": "Ei",
         "Message_deleted": "kustutati!",
+        "New": "Uus",
+        "Widgets": "BotTracker",
+        "false": "Ei",
         "save_changes": "Salvesta",
-        "true": "Jah",
-        "Widgets": "BotTracker"
+        "true": "Jah"
     }
 }

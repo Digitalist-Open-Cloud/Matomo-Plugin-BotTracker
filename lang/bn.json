@@ -1,6 +1,7 @@
 {
     "BotTracker": {
-        "BotActive": "সক্রিয়",
+        "BotActive": "সক্রিয়",
+        "BotName": "নাম",
         "false": "না",
         "save_changes": "সংরক্ষণ করুন"
     }

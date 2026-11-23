@@ -2,7 +2,11 @@
     "BotTracker": {
         "BotActive": "פעיל",
         "BotKeyword": "מונח חיפוש",
+        "BotName": "שם",
+        "Config": "הגדרה",
+        "Documentation": "תיעוד",
         "false": "לא",
-        "save_changes": "לשמור"
+        "save_changes": "לשמור",
+        "true": "כן"
     }
 }

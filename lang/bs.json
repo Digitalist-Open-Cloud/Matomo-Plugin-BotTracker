@@ -2,6 +2,7 @@
     "BotTracker": {
         "BotActive": "Aktivno",
         "BotKeyword": "Ključna riječ",
+        "BotName": "Ime",
         "false": "No",
         "save_changes": "Sačuvaj",
         "true": "Da"
