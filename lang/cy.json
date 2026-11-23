@@ -1,1 +1,8 @@
-{}
+{
+    "BotTracker": {
+        "BotName": "Enw",
+        "false": "Na",
+        "save_changes": "Cadw",
+        "true": "Ia"
+    }
+}

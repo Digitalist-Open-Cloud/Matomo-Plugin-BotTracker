@@ -1,10 +1,16 @@
 {
     "BotTracker": {
+        "BotActive": "فعال",
         "BotKeyword": "کلیدواژه",
-        "delete": "حذف",
+        "BotLastVisit": "اخرین بازدید",
+        "BotName": "نام",
+        "Config": "پیکربندی",
+        "Delete": "حذف",
+        "Documentation": "مستندات",
+        "New": "جدید",
+        "Top_10_Bots": "۱۰ ربات برتر",
         "false": "خیر",
         "save_changes": "ذخیره",
-        "Top_10_Bots": "۱۰ ربات برتر",
         "true": "بله"
     }
 }

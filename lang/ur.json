@@ -1,1 +1,7 @@
-{}
+{
+    "BotTracker": {
+        "BotName": "نام",
+        "false": "نہیں",
+        "true": "جی ہاں"
+    }
+}

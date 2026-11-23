@@ -1,1 +1,11 @@
-{}
+{
+    "BotTracker": {
+        "BotActive": "Aktivno",
+        "BotName": "Ime",
+        "Config": "Nastavitev",
+        "Documentation": "Dokumentacija",
+        "false": "Ne",
+        "save_changes": "Shrani",
+        "true": "Da"
+    }
+}

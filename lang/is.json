@@ -2,7 +2,10 @@
     "BotTracker": {
         "BotActive": "Kveikt",
         "BotKeyword": "Leitarorð",
+        "BotName": "Nafn",
+        "Config": "Uppsetning",
         "false": "Nei",
-        "save_changes": "Vista"
+        "save_changes": "Vista",
+        "true": "Já"
     }
 }

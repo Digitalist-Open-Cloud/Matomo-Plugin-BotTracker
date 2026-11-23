@@ -2,6 +2,7 @@
     "BotTracker": {
         "BotActive": "ገባሪ",
         "BotKeyword": "ቁልፍ ቃላት",
+        "Config": "ውቅረት",
         "false": "የለም",
         "save_changes": "አስቀምጥ",
         "true": "አዎን"

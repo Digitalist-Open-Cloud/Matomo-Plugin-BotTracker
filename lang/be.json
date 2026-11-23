@@ -2,6 +2,8 @@
     "BotTracker": {
         "BotActive": "Актыўныя",
         "BotKeyword": "Ключавое слова",
+        "BotName": "Імя",
+        "Config": "Канфігурацыя",
         "false": "Не",
         "save_changes": "Захаваць",
         "true": "Так"
